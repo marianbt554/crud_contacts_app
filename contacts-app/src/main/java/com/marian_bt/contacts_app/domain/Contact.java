@@ -41,7 +41,7 @@ public class Contact {
     private String           fundUse;
     private String           pastEvent;
     private String           contactPerson;
-    @NotNull
+    @NotBlank
     private String           gender;
     private String           comments;
     private LocalDateTime    createdAt;
