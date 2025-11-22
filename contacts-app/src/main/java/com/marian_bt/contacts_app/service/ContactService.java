@@ -8,7 +8,7 @@ public interface ContactService {
     List <Contact> getAllContacts();
 
     /*Find a single contact by the ID*/
-    List <Contact> getContactById (Long id);
+    Contact getContactById (Long id);
 
     /*Create a new contact method*/
     Contact createContact(Contact contact, String currentUsername);
@@ -20,7 +20,7 @@ public interface ContactService {
     void deleteContact(Long id, String currentUsername);
 
     /*Search contacts using multiple search criteria*/
-    List<Contact> searchContacts(ContactSearchCriteria searchCriteria);
+    List<Contact> searchContacts(ContactSearchCriteria criteria);
 
 
 

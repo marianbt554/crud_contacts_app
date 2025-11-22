@@ -1,0 +1,143 @@
+package com.marian_bt.contacts_app.service;
+
+
+import com.marian_bt.contacts_app.domain.Contact;
+import com.marian_bt.contacts_app.repository.ContactRepository;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import static sun.security.krb5.internal.ktab.KeyTab.normalize;
+
+@Service
+public class ContactServiceImpl implements ContactService{
+    private final ContactRepository contactRepository;
+
+    public ContactServiceImpl(ContactRepository contactRepository) {
+        this.contactRepository = contactRepository;
+    }
+
+    @Override
+    public List<Contact> getAllContacts() {
+        return contactRepository.findAll();
+    }
+
+    @Override
+    public Contact getContactById(Long id) {
+        return contactRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Contact not found with Id" + id));
+    }
+
+    @Override
+    public Contact createContact(Contact contact, String currentUsername) {
+        LocalDateTime now = LocalDateTime.now();
+
+        contact.setCreatedAt(now);
+        contact.setUpdatedAt(now);
+        contact.setCreatedBy(currentUsername);
+        contact.setUpdatedBy(currentUsername);
+        return contactRepository.save(contact);
+    }
+
+    @Override
+    public Contact updateContact(Long id, Contact updatedContact, String currentUsername) {
+        Contact existing = contactRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Contact not found with id: " + id));
+
+        existing.setTitle(updatedContact.getTitle());
+        existing.setFirstName(updatedContact.getFirstName());
+        existing.setLastName(updatedContact.getLastName());
+        existing.setPersGroup(updatedContact.getPersGroup());
+        existing.setFunction(updatedContact.getFunction());
+        existing.setInstitution(updatedContact.getInstitution());
+        existing.setFaculty(updatedContact.getFaculty());
+        existing.setStudyDomain(updatedContact.getStudyDomain());
+        existing.setEmail(updatedContact.getEmail());
+        existing.setPhone1(updatedContact.getPhone1());
+        existing.setPhone2(updatedContact.getPhone2());
+        existing.setPostAddress(updatedContact.getPostAddress());
+        existing.setCountry(updatedContact.getCountry());
+        existing.setInterest(updatedContact.getInterest());
+        existing.setCoilExp(updatedContact.isCoilExp());
+        existing.setMobilityFin(updatedContact.isMobilityFin());
+        existing.setFundUse(updatedContact.getFundUse());
+        existing.setPastEvent(updatedContact.getPastEvent());
+        existing.setContactPerson(updatedContact.getContactPerson());
+        existing.setGender(updatedContact.getGender());
+        existing.setComments(updatedContact.getComments());
+
+        // Audit fields
+        existing.setUpdatedAt(LocalDateTime.now());
+        existing.setUpdatedBy(currentUsername);
+
+        return contactRepository.save(existing);
+
+    }
+
+    @Override
+    public void deleteContact(Long id, String currentUsername) {
+        if (!contactRepository.existsById(id)) {
+            throw new RuntimeException("Contact not found with id: " + id);
+        }
+        contactRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Contact> searchContacts(ContactSearchCriteria criteria) {
+        String firstName     = normalize(criteria.getFirstName());
+        String lastName      = normalize(criteria.getLastName());
+        String institution   = normalize(criteria.getInstitution());
+        String email         = normalize(criteria.getEmail());
+        String persGroup     = normalize(criteria.getPersGroup());
+        String country       = normalize(criteria.getCountry());
+        String fundUse       = normalize(criteria.getFundUse());
+        String postAddress   = normalize(criteria.getPostAddress());
+        String phone1        = normalize(criteria.getPhone1());
+        String phone2        = normalize(criteria.getPhone2());
+        String faculty       = normalize(criteria.getFaculty());
+        String studyDomain   = normalize(criteria.getStudyDomain());
+        String gender        = normalize(criteria.getGender());
+
+        // Date/time fields can be passed as-is (null = no filter)
+        LocalDateTime createdAfter  = criteria.getCreatedAfter();
+        LocalDateTime createdBefore = criteria.getCreatedBefore();
+        LocalDateTime updatedAfter  = criteria.getUpdatedAfter();
+        LocalDateTime updatedBefore = criteria.getUpdatedBefore();
+
+        // Booleans already use null to mean "no filter"
+        Boolean coilExp     = criteria.getCoilExp();
+        Boolean mobilityFin = criteria.getMobilityFin();
+
+        return contactRepository.searchContacts(
+                firstName,
+                lastName,
+                institution,
+                email,
+                persGroup,
+                country,
+                fundUse,
+                postAddress,
+                phone1,
+                phone2,
+                faculty,
+                studyDomain,
+                gender,
+                coilExp,
+                mobilityFin,
+                createdAfter,
+                createdBefore,
+                updatedAfter,
+                updatedBefore
+        );
+    }
+
+    private String normalize(String value) {
+        if (value == null) {
+            return null;
+        }
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? null : trimmed;
+    }
+}

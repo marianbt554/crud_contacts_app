@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 
 @Entity
-public class Contact {
+public class Contact  {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
