@@ -1,17 +1,23 @@
 package com.marian_bt.contacts_app.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
 import java.time.LocalDateTime;
 
 
 
 @Entity
+@Table(
+        name = "contacts",
+        indexes = {
+             @Index(name = "idx_contacts_last_name", columnList = "lastName"),
+             @Index(name = "idx_contacts_institution", columnList = "institution"),
+             @Index(name = "idx_contacts_email", columnList = "email")
+        }
+)
 public class Contact  {
 
     @Id
@@ -21,17 +27,21 @@ public class Contact  {
 
     private String           title;
     @NotBlank
+    @Column(nullable = false)
     private String           firstName;
     @NotBlank
+    @Column(nullable = false)
     private String           lastName;
     private String           persGroup;
     private String           function;
     @NotBlank
+    @Column(nullable = false)
     private String           institution;
     private String           faculty;
     private String           studyDomain;
     @NotBlank
     @Email
+    @Column(nullable = false, unique = true)
     private String           email;
     private String           phone1;
     private String           phone2;
@@ -44,6 +54,11 @@ public class Contact  {
     private String           pastEvent;
     private String           contactPerson;
     @NotBlank
+    @Column(nullable = false)
+    @Pattern(
+            regexp = "^(?i)(male | female | diverse)",
+            message = "Gender must be one of : male, female, diverse."
+    )
     private String           gender;
     private String           comments;
     private LocalDateTime    createdAt;
@@ -54,6 +69,18 @@ public class Contact  {
 
     public Contact() {
 
+    }
+
+    public Contact(String firstName,
+                   String lastName,
+                   String institution,
+                   String email,
+                   String gender){
+        this.firstName =   firstName;
+        this.lastName =    lastName;
+        this.institution = institution;
+        this.email =       email;
+        this.gender =      gender;
     }
 
     public String getTitle() {
@@ -264,4 +291,15 @@ public class Contact  {
         this.updatedBy = updatedBy;
     }
 
+    @Override
+    public String toString(){
+        return "Contact{"+
+                "id=" + id +
+                ", firstName =' " +    firstName + '\''+
+                ", lastName = ' " +    lastName + '\'' +
+                ", institution = ' " + institution + '\'' +
+                ", email = ' " +       email + '\'' +
+                ", gender = ' " +      gender + '\'' +
+                '}';
+    }
 }
