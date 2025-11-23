@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${contact.id} == null ? 'Create Contact' : 'Edit Contact'">
+        Contact Form
+    </title>
+</head>
+<body>
+
+<h1 th:text="${contact.id} == null ? 'Create Contact' : 'Edit Contact'">Contact Form</h1>
+
+<form th:object="${contact}"
+      th:action="${contact.id} == null ? '/contacts' : '/contacts/' + contact.id"
+      method="post">
+
+    <!-- Basic info -->
+    <div>
+        <label>Title:
+            <input type="text" th:field="*{title}"/>
+        </label>
+    </div>
+
+    <div>
+        <label>First name *:
+            <input type="text" th:field="*{firstName}" required/>
+        </label>
+    </div>
+
+    <div>
+        <label>Last name *:
+            <input type="text" th:field="*{lastName}" required/>
+        </label>
+    </div>
+
+    <div>
+        <label>Gender *:
+            <input type="text" th:field="*{gender}" required/>
+        </label>
+    </div>
+
+    <!-- Contact info -->
+    <div>
+        <label>Email *:
+            <input type="email" th:field="*{email}" required/>
+        </label>
+    </div>
+
+    <div>
+        <label>Phone 1:
+            <input type="text" th:field="*{phone1}"/>
+        </label>
+    </div>
+
+    <div>
+        <label>Phone 2:
+            <input type="text" th:field="*{phone2}"/>
+        </label>
+    </div>
+
+    <!-- Academic / institution info -->
+    <div>
+        <label>Institution *:
+            <input type="text" th:field="*{institution}" required/>
+        </label>
+    </div>
+
+    <div>
+        <label>Faculty:
+            <input type="text" th:field="*{faculty}"/>
+        </label>
+    </div>
+
+    <div>
+        <label>Study domain:
+            <input type="text" th:field="*{studyDomain}"/>
+        </label>
+    </div>
+
+    <!-- Other info -->
+    <div>
+        <label>Group:
+            <input type="text" th:field="*{persGroup}"/>
+        </label>
+    </div>
+
+    <div>
+        <label>Function:
+            <input type="text" th:field="*{function}"/>
+        </label>
+    </div>
+
+    <div>
+        <label>Country:
+            <input type="text" th:field="*{country}"/>
+        </label>
+    </div>
+
+    <div>
+        <label>Post address:
+            <input type="text" th:field="*{postAddress}"/>
+        </label>
+    </div>
+
+    <div>
+        <label>Interest:
+            <input type="text" th:field="*{interest}"/>
+        </label>
+    </div>
+
+    <div>
+        <label>COIL experience:
+            <input type="checkbox" th:field="*{coilExp}"/>
+        </label>
+    </div>
+
+    <div>
+        <label>Mobility funding:
+            <input type="checkbox" th:field="*{mobilityFin}"/>
+        </label>
+    </div>
+
+    <div>
+        <label>Fund use:
+            <input type="text" th:field="*{fundUse}"/>
+        </label>
+    </div>
+
+    <div>
+        <label>Past event:
+            <input type="text" th:field="*{pastEvent}"/>
+        </label>
+    </div>
+
+    <div>
+        <label>Contact person:
+            <input type="text" th:field="*{contactPerson}"/>
+        </label>
+    </div>
+
+    <div>
+        <label>Comments:
+            <textarea th:field="*{comments}"></textarea>
+        </label>
+    </div>
+
+    <!-- Buttons -->
+    <div>
+        <button type="submit"
+                th:text="${contact.id} == null ? 'Create' : 'Update'">
+            Save
+        </button>
+
+        <a th:href="@{/contacts}">Cancel</a>
+    </div>
+</form>
+
+</body>
+</html>
