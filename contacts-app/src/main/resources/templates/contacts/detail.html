@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Details</title>
+</head>
+<body>
+
+<h1>Contact Details</h1>
+
+<div th:if="${contact != null}">
+    <p><strong>ID:</strong> <span th:text="${contact.id}">1</span></p>
+    <p><strong>Title:</strong> <span th:text="${contact.title}">Mr</span></p>
+    <p><strong>First name:</strong> <span th:text="${contact.firstName}">John</span></p>
+    <p><strong>Last name:</strong> <span th:text="${contact.lastName}">Doe</span></p>
+    <p><strong>Gender:</strong> <span th:text="${contact.gender}">M</span></p>
+    <p><strong>Email:</strong> <span th:text="${contact.email}">john@example.com</span></p>
+    <p><strong>Phone 1:</strong> <span th:text="${contact.phone1}">+49...</span></p>
+    <p><strong>Phone 2:</strong> <span th:text="${contact.phone2}">+49...</span></p>
+    <p><strong>Institution:</strong> <span th:text="${contact.institution}">Uni</span></p>
+    <p><strong>Faculty:</strong> <span th:text="${contact.faculty}">Faculty</span></p>
+    <p><strong>Study domain:</strong> <span th:text="${contact.studyDomain}">CS</span></p>
+    <p><strong>Country:</strong> <span th:text="${contact.country}">Germany</span></p>
+    <p><strong>Post address:</strong> <span th:text="${contact.postAddress}">Address</span></p>
+    <p><strong>Group:</strong> <span th:text="${contact.persGroup}">Group</span></p>
+    <p><strong>Function:</strong> <span th:text="${contact.function}">Professor</span></p>
+    <p><strong>Interest:</strong> <span th:text="${contact.interest}">Interest</span></p>
+    <p><strong>COIL experience:</strong> <span th:text="${contact.coilExp}">false</span></p>
+    <p><strong>Mobility funding:</strong> <span th:text="${contact.mobilityFin}">false</span></p>
+    <p><strong>Fund use:</strong> <span th:text="${contact.fundUse}">fund?</span></p>
+    <p><strong>Past event:</strong> <span th:text="${contact.pastEvent}">event</span></p>
+    <p><strong>Contact person:</strong> <span th:text="${contact.contactPerson}">person</span></p>
+    <p><strong>Comments:</strong> <span th:text="${contact.comments}">comments...</span></p>
+    <p><strong>Created at:</strong> <span th:text="${contact.createdAt}">2025-01-01</span></p>
+    <p><strong>Created by:</strong> <span th:text="${contact.createdBy}">user</span></p>
+    <p><strong>Updated at:</strong> <span th:text="${contact.updatedAt}">2025-01-02</span></p>
+    <p><strong>Updated by:</strong> <span th:text="${contact.updatedBy}">user</span></p>
+</div>
+
+<p>
+    <a th:href="@{/contacts}">Back to list</a> |
+    <a th:href="@{/contacts/{id}/edit(id=${contact.id})}">Edit</a>
+</p>
+
+</body>
+</html>
