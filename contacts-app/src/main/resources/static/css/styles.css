@@ -203,18 +203,46 @@ a.btn {
 
 /* ---------- Table (contacts list) ---------- */
 
+    .table-wrapper {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 1.25rem; /* if you want spacing */
+
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+/* Firefox: thin blue scrollbar on dark track */
 .table-wrapper {
-    margin-top: 1rem;
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(148, 163, 184, 0.3);
-    overflow: hidden;
-    background: radial-gradient(circle at top, rgba(15, 23, 42, 0.8), var(--bg-card-soft));
+    scrollbar-width: thin;
+    scrollbar-color: #2563eb #020617;  /* thumb | track */
+}
+
+/* WebKit browsers (Chrome, Edge, Safari) */
+.table-wrapper::-webkit-scrollbar {
+    height: 0.55rem; /* horizontal scrollbar thickness */
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: linear-gradient(90deg, #020617, #0b1220); /* dark, matches header vibe */
+    border-radius: 999px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #38bdf8, #2563eb); /* cyan → blue, like an accent */
+    border-radius: 999px;
+    border: 2px solid #020617; /* thin dark border so it blends into the track */
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8); /* slightly darker on hover */
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.86rem;
+    min-width: 1400px;
 }
 
 .table thead {
