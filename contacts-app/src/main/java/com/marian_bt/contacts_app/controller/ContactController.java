@@ -63,11 +63,18 @@ public class ContactController  {
         return "contacts/form";
     }
 
-    @PostMapping("/{id}")
-    public String editContact(@PathVariable("id") Long id, @ModelAttribute("contact") Contact contact)
-    {
-        String currentUsername = "system";
-        contactService.updateContact(id, contact, currentUsername);
+    @PostMapping("/save")
+    public String saveContact(@ModelAttribute("contact") Contact contact) {
+        String currentUsername = "system"; // later from Spring Security
+
+        if (contact.getId() == null) {
+            // no id -> create
+            contactService.createContact(contact, currentUsername);
+        } else {
+            // id present -> update
+            contactService.updateContact(contact.getId(), contact, currentUsername);
+        }
+
         return "redirect:/contacts";
     }
 
