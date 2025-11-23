@@ -75,47 +75,71 @@
 
 <!-- Contacts table -->
 <table border="1" cellpadding="4" cellspacing="0">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>First name</th>
-        <th>Last name</th>
-        <th>Email</th>
-        <th>Institution</th>
-        <th>Country</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="contact : ${contacts}">
-        <td th:text="${contact.id}">1</td>
-        <td th:text="${contact.title}">Mr</td>
-        <td th:text="${contact.firstName}">John</td>
-        <td th:text="${contact.lastName}">Doe</td>
-        <td th:text="${contact.email}">john@example.com</td>
-        <td th:text="${contact.institution}">Uni</td>
-        <td th:text="${contact.country}">Germany</td>
-        <td>
-            <a th:href="@{/contacts/{id}(id=${contact.id})}">View</a>
-            |
-            <a th:href="@{/contacts/{id}/edit(id=${contact.id})}">Edit</a>
-            |
-            <form th:action="@{/contacts/{id}/delete(id=${contact.id})}"
-                  method="post"
-                  style="display:inline">
-                <button type="submit"
-                        onclick="return confirm('Delete this contact?');">
-                    Delete
-                </button>
-            </form>
-        </td>
-    </tr>
-    <tr th:if="${#lists.isEmpty(contacts)}">
-        <td colspan="8">No contacts found.</td>
-    </tr>
-    </tbody>
+<thead>
+<tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th>First name</th>
+    <th>Last name</th>
+    <th>Gender</th>
+    <th>Email</th>
+    <th>Phone 1</th>
+    <th>Phone 2</th>
+    <th>Institution</th>
+    <th>Faculty</th>
+    <th>Study domain</th>
+    <th>Group</th>
+    <th>Function</th>
+    <th>Country</th>
+    <th>COIL exp</th>
+    <th>Mobility fin</th>
+    <th>Created at</th>
+    <th>Updated at</th>
+    <th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+<tr th:each="contact : ${contacts}">
+    <td th:text="${contact.id}">1</td>
+    <td th:text="${contact.title}">Mr</td>
+    <td th:text="${contact.firstName}">John</td>
+    <td th:text="${contact.lastName}">Doe</td>
+    <td th:text="${contact.gender}">M</td>
+    <td th:text="${contact.email}">john@example.com</td>
+    <td th:text="${contact.phone1}">+49...</td>
+    <td th:text="${contact.phone2}">+49...</td>
+    <td th:text="${contact.institution}">Uni</td>
+    <td th:text="${contact.faculty}">Faculty</td>
+    <td th:text="${contact.studyDomain}">CS</td>
+    <td th:text="${contact.persGroup}">Group</td>
+    <td th:text="${contact.function}">Professor</td>
+    <td th:text="${contact.country}">Germany</td>
+    <td th:text="${contact.coilExp}">false</td>
+    <td th:text="${contact.mobilityFin}">false</td>
+    <td th:text="${contact.createdAt}">2025-01-01T10:00</td>
+    <td th:text="${contact.updatedAt}">2025-01-02T11:00</td>
+    <td>
+        <a th:href="@{/contacts/{id}(id=${contact.id})}">View</a>
+        |
+        <a th:href="@{/contacts/{id}/edit(id=${contact.id})}">Edit</a>
+        |
+        <form th:action="@{/contacts/{id}/delete(id=${contact.id})}"
+              method="post" style="display:inline">
+            <button type="submit"
+                    onclick="return confirm('Delete this contact?');">
+                Delete
+            </button>
+        </form>
+    </td>
+</tr>
+
+<tr th:if="${#lists.isEmpty(contacts)}">
+    <td colspan="19">No contacts found.</td>
+</tr>
+</tbody>
 </table>
+
 
 </body>
 </html>
