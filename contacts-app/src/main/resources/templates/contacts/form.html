@@ -13,7 +13,11 @@
 <form th:object="${contact}"
       th:action="@{/contacts/save}"
       method="post">
-
+    <div>
+        <label>
+            <input type="hidden" th:field="*{id}"/>
+        </label>
+    </div>
     <!-- Basic info -->
     <div>
         <label>Title:
