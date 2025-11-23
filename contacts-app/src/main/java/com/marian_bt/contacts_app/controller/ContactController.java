@@ -26,7 +26,7 @@ public class ContactController  {
     {
         List<Contact> contacts = contactService.getAllContacts();
         model.addAttribute("contacts", contacts);
-        model.addAttribute("contact", new ContactSearchCriteria());
+        model.addAttribute("criteria", new ContactSearchCriteria());
         return "contacts/list";
     }
 
