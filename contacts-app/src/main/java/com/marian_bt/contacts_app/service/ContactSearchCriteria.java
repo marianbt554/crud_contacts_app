@@ -1,27 +1,42 @@
 package com.marian_bt.contacts_app.service;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDateTime;
 
 public class ContactSearchCriteria {
-    private String  firstName;
-    private String  lastName;
-    private String  institution;
-    private String  email;
-    private String  persGroup;
-    private String  country;
-    private Boolean coilExp;
-    private Boolean mobilityFin;
-    private String  fundUse;
-    private String  postAddress;
-    private String  phone1;
-    private String  phone2;
-    private String  faculty;
-    private String  studyDomain;
-    private String  gender;
+    private String        firstName;
+    private String        lastName;
+    private String        institution;
+    private String        email;
+    private String        persGroup;
+    private String        country;
+    private Boolean       coilExp;
+    private Boolean       mobilityFin;
+    private String        fundUse;
+    private String        postAddress;
+    private String        phone1;
+    private String        phone2;
+    private String        faculty;
+    private String        studyDomain;
+    private String        gender;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd 'T' HH:mm")
     private LocalDateTime createdAfter;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd 'T' HH:mm")
     private LocalDateTime createdBefore;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd 'T' HH:mm")
     private LocalDateTime updatedAfter;
+    @DateTimeFormat(pattern = "yyyy-MM-dd 'T' HH:mm")
     private LocalDateTime updatedBefore;
+
+    private static String trimToNull(String value){
+        if (value == null) return null;
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? null : trimmed;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -173,5 +188,46 @@ public class ContactSearchCriteria {
 
     public void setUpdatedBefore(LocalDateTime updatedBefore) {
         this.updatedBefore = updatedBefore;
+    }
+
+    private boolean isEmpty(){
+        return firstName      == null &&
+                lastName      == null &&
+                institution   == null &&
+                email         == null &&
+                persGroup     == null &&
+                country       == null &&
+                coilExp       == null &&
+                mobilityFin   == null &&
+                fundUse       == null &&
+                postAddress   == null &&
+                phone1        == null &&
+                phone2        == null &&
+                faculty       == null &&
+                studyDomain   == null &&
+                gender        == null &&
+                createdAfter  == null &&
+                createdBefore == null &&
+                updatedAfter  == null &&
+                updatedBefore == null;
+
+    }
+
+    @Override
+    public String toString() {
+        return "ContactSearchCriteria{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", institution='" + institution + '\'' +
+                ", email='" + email + '\'' +
+                ", persGroup='" + persGroup + '\'' +
+                ", country='" + country + '\'' +
+                ", coilExp=" + coilExp +
+                ", mobilityFin=" + mobilityFin +
+                ", createdAfter=" + createdAfter +
+                ", createdBefore=" + createdBefore +
+                ", updatedAfter=" + updatedAfter +
+                ", updatedBefore=" + updatedBefore +
+                '}';
     }
 }
