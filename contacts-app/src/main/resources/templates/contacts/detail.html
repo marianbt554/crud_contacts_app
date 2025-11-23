@@ -3,44 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <title>Contact Details</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
-<body>
+<body class="page-root">
 
-<h1>Contact Details</h1>
-
-<div th:if="${contact != null}">
-    <p><strong>ID:</strong> <span th:text="${contact.id}">1</span></p>
-    <p><strong>Title:</strong> <span th:text="${contact.title}">Mr</span></p>
-    <p><strong>First name:</strong> <span th:text="${contact.firstName}">John</span></p>
-    <p><strong>Last name:</strong> <span th:text="${contact.lastName}">Doe</span></p>
-    <p><strong>Gender:</strong> <span th:text="${contact.gender}">M</span></p>
-    <p><strong>Email:</strong> <span th:text="${contact.email}">john@example.com</span></p>
-    <p><strong>Phone 1:</strong> <span th:text="${contact.phone1}">+49...</span></p>
-    <p><strong>Phone 2:</strong> <span th:text="${contact.phone2}">+49...</span></p>
-    <p><strong>Institution:</strong> <span th:text="${contact.institution}">Uni</span></p>
-    <p><strong>Faculty:</strong> <span th:text="${contact.faculty}">Faculty</span></p>
-    <p><strong>Study domain:</strong> <span th:text="${contact.studyDomain}">CS</span></p>
-    <p><strong>Country:</strong> <span th:text="${contact.country}">Germany</span></p>
-    <p><strong>Post address:</strong> <span th:text="${contact.postAddress}">Address</span></p>
-    <p><strong>Group:</strong> <span th:text="${contact.persGroup}">Group</span></p>
-    <p><strong>Function:</strong> <span th:text="${contact.function}">Professor</span></p>
-    <p><strong>Interest:</strong> <span th:text="${contact.interest}">Interest</span></p>
-    <p><strong>COIL experience:</strong> <span th:text="${contact.coilExp}">false</span></p>
-    <p><strong>Mobility funding:</strong> <span th:text="${contact.mobilityFin}">false</span></p>
-    <p><strong>Fund use:</strong> <span th:text="${contact.fundUse}">fund?</span></p>
-    <p><strong>Past event:</strong> <span th:text="${contact.pastEvent}">event</span></p>
-    <p><strong>Contact person:</strong> <span th:text="${contact.contactPerson}">person</span></p>
-    <p><strong>Comments:</strong> <span th:text="${contact.comments}">comments...</span></p>
-    <p><strong>Created at:</strong> <span th:text="${contact.createdAt}">2025-01-01</span></p>
-    <p><strong>Created by:</strong> <span th:text="${contact.createdBy}">user</span></p>
-    <p><strong>Updated at:</strong> <span th:text="${contact.updatedAt}">2025-01-02</span></p>
-    <p><strong>Updated by:</strong> <span th:text="${contact.updatedBy}">user</span></p>
+<div class="app-header">
+    <div class="app-header-inner">
+        <div class="app-title">
+            Contacts <span>Manager</span>
+        </div>
+        <div class="app-header-actions">
+            <span>Contact details</span>
+        </div>
+    </div>
 </div>
 
-<p>
-    <a th:href="@{/contacts}">Back to list</a> |
-    <a th:href="@{/contacts/{id}/edit(id=${contact.id})}">Edit</a>
-</p>
+<main class="app-main">
+    <div class="card" th:if="${contact != null}">
+
+        <div class="card-header">
+            <div>
+                <h1 class="card-title">
+                    <span th:text="${contact.firstName}">John</span>
+                    <span th:text="${contact.lastName}">Doe</span>
+                </h1>
+                <div class="card-subtitle">
+                    <span th:text="${contact.email}">john@example.com</span>
+                </div>
+            </div>
+            <div class="btn-row">
+                <a th:href="@{/contacts/{id}/edit(id=${contact.id})}"
+                   class="btn btn-secondary">Edit</a>
+                <a th:href="@{/contacts}" class="btn btn-ghost">Back to list</a>
+            </div>
+        </div>
+
+        <!-- Two-column detail grid -->
+        <div class="detail-grid">
+
+            <div>
+                <span class="detail-label">ID</span>
+                <span class="detail-value" th:text="${contact.id}">1</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Title</span>
+                <span class="detail-value" th:text="${contact.title}">Mr</span>
+            </div>
+
+            <div>
+                <span class="detail-label">First name</span>
+                <span class="detail-value" th:text="${contact.firstName}">John</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Last name</span>
+                <span class="detail-value" th:text="${contact.lastName}">Doe</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Gender</span>
+                <span class="detail-value" th:text="${contact.gender}">M</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Group</span>
+                <span class="detail-value" th:text="${contact.persGroup}">Group</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Function</span>
+                <span class="detail-value" th:text="${contact.function}">Professor</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Institution</span>
+                <span class="detail-value" th:text="${contact.institution}">Uni</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Faculty</span>
+                <span class="detail-value" th:text="${contact.faculty}">Faculty</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Study domain</span>
+                <span class="detail-value" th:text="${contact.studyDomain}">CS</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Country</span>
+                <span class="detail-value" th:text="${contact.country}">Germany</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Post address</span>
+                <span class="detail-value" th:text="${contact.postAddress}">Address</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Email</span>
+                <span class="detail-value" th:text="${contact.email}">john@example.com</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Phone 1</span>
+                <span class="detail-value" th:text="${contact.phone1}">+49...</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Phone 2</span>
+                <span class="detail-value" th:text="${contact.phone2}">+49...</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Interest</span>
+                <span class="detail-value" th:text="${contact.interest}">Interest</span>
+            </div>
+
+            <div>
+                <span class="detail-label">COIL experience</span>
+                <span class="detail-value">
+                    <span th:if="${contact.coilExp}" class="badge badge-yes">Yes</span>
+                    <span th:if="${!contact.coilExp}" class="badge badge-no">No</span>
+                </span>
+            </div>
+
+            <div>
+                <span class="detail-label">Mobility funding</span>
+                <span class="detail-value">
+                    <span th:if="${contact.mobilityFin}" class="badge badge-yes">Yes</span>
+                    <span th:if="${!contact.mobilityFin}" class="badge badge-no">No</span>
+                </span>
+            </div>
+
+            <div>
+                <span class="detail-label">Fund use</span>
+                <span class="detail-value" th:text="${contact.fundUse}">fund?</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Past event</span>
+                <span class="detail-value" th:text="${contact.pastEvent}">event</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Contact person</span>
+                <span class="detail-value" th:text="${contact.contactPerson}">person</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Comments</span>
+                <span class="detail-value" th:text="${contact.comments}">comments...</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Created at</span>
+                <span class="detail-value"
+                      th:text="${contact.createdAt != null ? #temporals.format(contact.createdAt, 'yyyy-MM-dd HH:mm') : ''}">
+                    2025-01-01 10:00
+                </span>
+            </div>
+
+            <div>
+                <span class="detail-label">Created by</span>
+                <span class="detail-value" th:text="${contact.createdBy}">user</span>
+            </div>
+
+            <div>
+                <span class="detail-label">Updated at</span>
+                <span class="detail-value"
+                      th:text="${contact.updatedAt != null ? #temporals.format(contact.updatedAt, 'yyyy-MM-dd HH:mm') : ''}">
+                    2025-01-02 11:00
+                </span>
+            </div>
+
+            <div>
+                <span class="detail-label">Updated by</span>
+                <span class="detail-value" th:text="${contact.updatedBy}">user</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Fallback if somehow no contact is found -->
+    <div class="card" th:if="${contact == null}">
+        <div class="card-header">
+            <div>
+                <h1 class="card-title">Contact not found</h1>
+                <div class="card-subtitle">
+                    The requested contact does not exist or has been deleted.
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <a th:href="@{/contacts}" class="btn btn-secondary">Back to list</a>
+        </div>
+    </div>
+
+</main>
 
 </body>
 </html>
