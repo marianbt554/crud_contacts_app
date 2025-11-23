@@ -5,159 +5,183 @@
     <title th:text="${contact.id} == null ? 'Create Contact' : 'Edit Contact'">
         Contact Form
     </title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
-<body>
+<body class="page-root">
 
-<h1 th:text="${contact.id} == null ? 'Create Contact' : 'Edit Contact'">Contact Form</h1>
+<div class="app-header">
+    <div class="app-header-inner">
+        <div class="app-title">
+            Contacts <span>Manager</span>
+        </div>
+        <div class="app-header-actions">
+            <span th:text="${contact.id} == null ? 'Create new contact' : 'Edit existing contact'">
+                Create new contact
+            </span>
+        </div>
+    </div>
+</div>
 
-<form th:object="${contact}"
-      th:action="@{/contacts/save}"
-      method="post">
-    <div>
-        <label>
+<main class="app-main">
+    <div class="card">
+
+        <div class="card-header">
+            <div>
+                <h1 class="card-title"
+                    th:text="${contact.id} == null ? 'Create Contact' : 'Edit Contact'">
+                    Contact Form
+                </h1>
+                <div class="card-subtitle">
+                    Fields marked with * are required.
+                </div>
+            </div>
+        </div>
+
+        <form th:object="${contact}"
+              th:action="@{/contacts/save}"
+              method="post">
+
+            <!-- hidden ID for edit -->
             <input type="hidden" th:field="*{id}"/>
-        </label>
-    </div>
-    <!-- Basic info -->
-    <div>
-        <label>Title:
-            <input type="text" th:field="*{title}"/>
-        </label>
-    </div>
 
-    <div>
-        <label>First name *:
-            <input type="text" th:field="*{firstName}" required/>
-        </label>
-    </div>
+            <!-- 2-column responsive grid -->
+            <div class="form-grid">
 
-    <div>
-        <label>Last name *:
-            <input type="text" th:field="*{lastName}" required/>
-        </label>
-    </div>
+                <!-- Basic info -->
+                <div class="form-field">
+                    <label class="form-label">Title</label>
+                    <input type="text" th:field="*{title}" class="form-control"/>
+                </div>
 
-    <div>
-        <label>Gender *:
-            <input type="text" th:field="*{gender}" required/>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">First name *</label>
+                    <input type="text" th:field="*{firstName}" required class="form-control"/>
+                </div>
 
-    <!-- Contact info -->
-    <div>
-        <label>Email *:
-            <input type="email" th:field="*{email}" required/>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">Last name *</label>
+                    <input type="text" th:field="*{lastName}" required class="form-control"/>
+                </div>
 
-    <div>
-        <label>Phone 1:
-            <input type="text" th:field="*{phone1}"/>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">Gender *</label>
+                    <input type="text" th:field="*{gender}" required class="form-control"/>
+                </div>
 
-    <div>
-        <label>Phone 2:
-            <input type="text" th:field="*{phone2}"/>
-        </label>
-    </div>
+                <!-- Contact info -->
+                <div class="form-field">
+                    <label class="form-label">Email *</label>
+                    <input type="email" th:field="*{email}" required class="form-control"/>
+                </div>
 
-    <!-- Academic / institution info -->
-    <div>
-        <label>Institution *:
-            <input type="text" th:field="*{institution}" required/>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">Phone 1</label>
+                    <input type="text" th:field="*{phone1}" class="form-control"/>
+                </div>
 
-    <div>
-        <label>Faculty:
-            <input type="text" th:field="*{faculty}"/>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">Phone 2</label>
+                    <input type="text" th:field="*{phone2}" class="form-control"/>
+                </div>
 
-    <div>
-        <label>Study domain:
-            <input type="text" th:field="*{studyDomain}"/>
-        </label>
-    </div>
+                <!-- Institution / academic -->
+                <div class="form-field">
+                    <label class="form-label">Institution *</label>
+                    <input type="text" th:field="*{institution}" required class="form-control"/>
+                </div>
 
-    <!-- Other info -->
-    <div>
-        <label>Group:
-            <input type="text" th:field="*{persGroup}"/>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">Faculty</label>
+                    <input type="text" th:field="*{faculty}" class="form-control"/>
+                </div>
 
-    <div>
-        <label>Function:
-            <input type="text" th:field="*{function}"/>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">Study domain</label>
+                    <input type="text" th:field="*{studyDomain}" class="form-control"/>
+                </div>
 
-    <div>
-        <label>Country:
-            <input type="text" th:field="*{country}"/>
-        </label>
-    </div>
+                <!-- Other info -->
+                <div class="form-field">
+                    <label class="form-label">Group</label>
+                    <input type="text" th:field="*{persGroup}" class="form-control"/>
+                </div>
 
-    <div>
-        <label>Post address:
-            <input type="text" th:field="*{postAddress}"/>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">Function</label>
+                    <input type="text" th:field="*{function}" class="form-control"/>
+                </div>
 
-    <div>
-        <label>Interest:
-            <input type="text" th:field="*{interest}"/>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">Country</label>
+                    <input type="text" th:field="*{country}" class="form-control"/>
+                </div>
 
-    <div>
-        <label>COIL experience:
-            <input type="checkbox" th:field="*{coilExp}"/>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">Post address</label>
+                    <input type="text" th:field="*{postAddress}" class="form-control"/>
+                </div>
 
-    <div>
-        <label>Mobility funding:
-            <input type="checkbox" th:field="*{mobilityFin}"/>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">Interest</label>
+                    <input type="text" th:field="*{interest}" class="form-control"/>
+                </div>
 
-    <div>
-        <label>Fund use:
-            <input type="text" th:field="*{fundUse}"/>
-        </label>
-    </div>
+                <!-- Booleans -->
+                <div class="form-field">
+                    <label class="form-label">COIL experience</label>
+                    <div>
+                        <input type="checkbox" th:field="*{coilExp}"/>
+                        <span class="text-muted">Has COIL experience</span>
+                    </div>
+                </div>
 
-    <div>
-        <label>Past event:
-            <input type="text" th:field="*{pastEvent}"/>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">Mobility funding</label>
+                    <div>
+                        <input type="checkbox" th:field="*{mobilityFin}"/>
+                        <span class="text-muted">Has mobility funding</span>
+                    </div>
+                </div>
 
-    <div>
-        <label>Contact person:
-            <input type="text" th:field="*{contactPerson}"/>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">Fund use</label>
+                    <input type="text" th:field="*{fundUse}" class="form-control"/>
+                </div>
 
-    <div>
-        <label>Comments:
-            <textarea th:field="*{comments}"></textarea>
-        </label>
-    </div>
+                <div class="form-field">
+                    <label class="form-label">Past event</label>
+                    <input type="text" th:field="*{pastEvent}" class="form-control"/>
+                </div>
 
-    <!-- Buttons -->
-    <div>
-        <button type="submit"
-                th:text="${contact.id} == null ? 'Create' : 'Update'">
-            Save
-        </button>
+                <div class="form-field">
+                    <label class="form-label">Contact person</label>
+                    <input type="text" th:field="*{contactPerson}" class="form-control"/>
+                </div>
+            </div>
 
-        <a th:href="@{/contacts}">Cancel</a>
+            <!-- Comments full-width -->
+            <div class="mt-2">
+                <div class="form-field">
+                    <label class="form-label">Comments</label>
+                    <textarea th:field="*{comments}" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="form-footer">
+                <a th:href="@{/contacts}" class="btn btn-ghost">Cancel</a>
+                <div class="form-footer-right">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            th:text="${contact.id} == null ? 'Create' : 'Update'">
+                        Save
+                    </button>
+                </div>
+            </div>
+
+        </form>
     </div>
-</form>
+</main>
 
 </body>
 </html>
