@@ -11,7 +11,7 @@
 <h1 th:text="${contact.id} == null ? 'Create Contact' : 'Edit Contact'">Contact Form</h1>
 
 <form th:object="${contact}"
-      th:action="${contact.id} == null ? '/contacts' : '/contacts/' + contact.id"
+      th:action="@{/contacts/save}"
       method="post">
 
     <!-- Basic info -->
