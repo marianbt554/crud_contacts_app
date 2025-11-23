@@ -3,143 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <title>Contacts</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
-<body>
+<body class="page-root">
 
-<h1>Contacts</h1>
+<div class="app-header">
+    <div class="app-header-inner">
+        <div class="app-title">
+            Contacts <span>Manager</span>
+        </div>
+        <div class="app-header-actions">
+            <span>Contacts CRUD · Spring Boot</span>
+        </div>
+    </div>
+</div>
 
-<!-- Link to create a new contact -->
-<p>
-    <a th:href="@{/contacts/new}">Create New Contact</a>
-</p>
+<main class="app-main">
+    <div class="card">
 
-<!-- Search form (advanced search using ContactSearchCriteria) -->
-<form th:action="@{/contacts/search}" th:object="${criteria}" method="get">
-    <fieldset>
-        <legend>Search</legend>
+        <!-- Header row: title + New contact button -->
+        <div class="card-header">
+            <div>
+                <h1 class="card-title">Contacts</h1>
+                <div class="card-subtitle">
+                    Manage, search and update all contacts in one place.
+                </div>
+            </div>
+            <div class="btn-row">
+                <a th:href="@{/contacts/new}" class="btn btn-primary">+ New contact</a>
+            </div>
+        </div>
 
-        <label>First name:
-            <input type="text" th:field="*{firstName}"/>
-        </label>
+        <!-- Search form (advanced search using ContactSearchCriteria) -->
+        <form th:action="@{/contacts/search}" th:object="${criteria}" method="get">
+            <div class="form-grid">
 
-        <label>Last name:
-            <input type="text" th:field="*{lastName}"/>
-        </label>
+                <div class="form-field">
+                    <label class="form-label">First name</label>
+                    <input type="text" th:field="*{firstName}" class="form-control"/>
+                </div>
 
-        <label>Email:
-            <input type="text" th:field="*{email}"/>
-        </label>
+                <div class="form-field">
+                    <label class="form-label">Last name</label>
+                    <input type="text" th:field="*{lastName}" class="form-control"/>
+                </div>
 
-        <label>Institution:
-            <input type="text" th:field="*{institution}"/>
-        </label>
+                <div class="form-field">
+                    <label class="form-label">Email</label>
+                    <input type="text" th:field="*{email}" class="form-control"/>
+                </div>
 
-        <label>Group:
-            <input type="text" th:field="*{persGroup}"/>
-        </label>
+                <div class="form-field">
+                    <label class="form-label">Institution</label>
+                    <input type="text" th:field="*{institution}" class="form-control"/>
+                </div>
 
-        <label>Country:
-            <input type="text" th:field="*{country}"/>
-        </label>
+                <div class="form-field">
+                    <label class="form-label">Group</label>
+                    <input type="text" th:field="*{persGroup}" class="form-control"/>
+                </div>
 
-        <label>COIL experience:
-            <select th:field="*{coilExp}">
-                <option th:value="${null}">Any</option>
-                <option th:value="true">Yes</option>
-                <option th:value="false">No</option>
-            </select>
-        </label>
+                <div class="form-field">
+                    <label class="form-label">Country</label>
+                    <input type="text" th:field="*{country}" class="form-control"/>
+                </div>
 
-        <label>Mobility funding:
-            <select th:field="*{mobilityFin}">
-                <option th:value="${null}">Any</option>
-                <option th:value="true">Yes</option>
-                <option th:value="false">No</option>
-            </select>
-        </label>
+                <div class="form-field">
+                    <label class="form-label">COIL experience</label>
+                    <select th:field="*{coilExp}" class="form-select">
+                        <option th:value="${null}">Any</option>
+                        <option th:value="true">Yes</option>
+                        <option th:value="false">No</option>
+                    </select>
+                </div>
 
-        <label>Created after:
-            <input type="datetime-local" th:field="*{createdAfter}"/>
-        </label>
+                <div class="form-field">
+                    <label class="form-label">Mobility funding</label>
+                    <select th:field="*{mobilityFin}" class="form-select">
+                        <option th:value="${null}">Any</option>
+                        <option th:value="true">Yes</option>
+                        <option th:value="false">No</option>
+                    </select>
+                </div>
 
-        <label>Created before:
-            <input type="datetime-local" th:field="*{createdBefore}"/>
-        </label>
+                <div class="form-field">
+                    <label class="form-label">Created after</label>
+                    <input type="datetime-local" th:field="*{createdAfter}" class="form-control"/>
+                </div>
 
-        <button type="submit">Search</button>
-        <a th:href="@{/contacts}">Clear</a>
-    </fieldset>
-</form>
+                <div class="form-field">
+                    <label class="form-label">Created before</label>
+                    <input type="datetime-local" th:field="*{createdBefore}" class="form-control"/>
+                </div>
 
-<hr/>
+            </div>
 
-<!-- Contacts table -->
-<table border="1" cellpadding="4" cellspacing="0">
-<thead>
-<tr>
-    <th>ID</th>
-    <th>Title</th>
-    <th>First name</th>
-    <th>Last name</th>
-    <th>Gender</th>
-    <th>Email</th>
-    <th>Phone 1</th>
-    <th>Phone 2</th>
-    <th>Institution</th>
-    <th>Faculty</th>
-    <th>Study domain</th>
-    <th>Group</th>
-    <th>Function</th>
-    <th>Country</th>
-    <th>COIL exp</th>
-    <th>Mobility fin</th>
-    <th>Created at</th>
-    <th>Updated at</th>
-    <th>Actions</th>
-</tr>
-</thead>
-
-<tbody>
-<tr th:each="contact : ${contacts}">
-    <td th:text="${contact.id}">1</td>
-    <td th:text="${contact.title}">Mr</td>
-    <td th:text="${contact.firstName}">John</td>
-    <td th:text="${contact.lastName}">Doe</td>
-    <td th:text="${contact.gender}">M</td>
-    <td th:text="${contact.email}">john@example.com</td>
-    <td th:text="${contact.phone1}">+49...</td>
-    <td th:text="${contact.phone2}">+49...</td>
-    <td th:text="${contact.institution}">Uni</td>
-    <td th:text="${contact.faculty}">Faculty</td>
-    <td th:text="${contact.studyDomain}">CS</td>
-    <td th:text="${contact.persGroup}">Group</td>
-    <td th:text="${contact.function}">Professor</td>
-    <td th:text="${contact.country}">Germany</td>
-    <td th:text="${contact.coilExp}">false</td>
-    <td th:text="${contact.mobilityFin}">false</td>
-    <td th:text="${contact.createdAt}">2025-01-01T10:00</td>
-    <td th:text="${contact.updatedAt}">2025-01-02T11:00</td>
-    <td>
-        <a th:href="@{/contacts/{id}(id=${contact.id})}">View</a>
-        |
-        <a th:href="@{/contacts/{id}/edit(id=${contact.id})}">Edit</a>
-        |
-        <form th:action="@{/contacts/{id}/delete(id=${contact.id})}"
-              method="post" style="display:inline">
-            <button type="submit"
-                    onclick="return confirm('Delete this contact?');">
-                Delete
-            </button>
+            <div class="form-footer">
+                <a th:href="@{/contacts}" class="btn btn-ghost">Clear filters</a>
+                <div class="form-footer-right">
+                    <button type="submit" class="btn btn-secondary">Search</button>
+                </div>
+            </div>
         </form>
-    </td>
-</tr>
 
-<tr th:if="${#lists.isEmpty(contacts)}">
-    <td colspan="19">No contacts found.</td>
-</tr>
-</tbody>
-</table>
+        <!-- Contacts table -->
+        <div class="table-wrapper mt-3">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Gender</th>
+                    <th>Email</th>
+                    <th>Phone 1</th>
+                    <th>Phone 2</th>
+                    <th>Institution</th>
+                    <th>Faculty</th>
+                    <th>Study domain</th>
+                    <th>Group</th>
+                    <th>Function</th>
+                    <th>Country</th>
+                    <th>COIL exp</th>
+                    <th>Mobility fin</th>
+                    <th>Created at</th>
+                    <th>Updated at</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
 
+                <tbody>
+                <tr th:each="contact : ${contacts}">
+                    <td th:text="${contact.id}">1</td>
+                    <td th:text="${contact.title}">Mr</td>
+                    <td th:text="${contact.firstName}">John</td>
+                    <td th:text="${contact.lastName}">Doe</td>
+                    <td th:text="${contact.gender}">M</td>
+                    <td th:text="${contact.email}">john@example.com</td>
+                    <td th:text="${contact.phone1}">+49...</td>
+                    <td th:text="${contact.phone2}">+49...</td>
+                    <td th:text="${contact.institution}">Uni</td>
+                    <td th:text="${contact.faculty}">Faculty</td>
+                    <td th:text="${contact.studyDomain}">CS</td>
+                    <td th:text="${contact.persGroup}">Group</td>
+                    <td th:text="${contact.function}">Professor</td>
+                    <td th:text="${contact.country}">Germany</td>
+
+                    <!-- COIL experience pill -->
+                    <td>
+                        <span th:if="${contact.coilExp}" class="badge badge-yes">Yes</span>
+                        <span th:if="${!contact.coilExp}" class="badge badge-no">No</span>
+                    </td>
+
+                    <!-- Mobility funding pill -->
+                    <td>
+                        <span th:if="${contact.mobilityFin}" class="badge badge-yes">Yes</span>
+                        <span th:if="${!contact.mobilityFin}" class="badge badge-no">No</span>
+                    </td>
+
+                    <!-- Formatted timestamps -->
+                    <td th:text="${contact.createdAt != null ? #temporals.format(contact.createdAt, 'yyyy-MM-dd HH:mm') : ''}">
+                        2025-01-01 10:00
+                    </td>
+                    <td th:text="${contact.updatedAt != null ? #temporals.format(contact.updatedAt, 'yyyy-MM-dd HH:mm') : ''}">
+                        2025-01-02 11:00
+                    </td>
+
+                    <td class="actions-cell">
+                        <a th:href="@{/contacts/{id}(id=${contact.id})}" class="btn btn-ghost">View</a>
+                        <a th:href="@{/contacts/{id}/edit(id=${contact.id})}" class="btn btn-secondary">Edit</a>
+                        <form th:action="@{/contacts/{id}/delete(id=${contact.id})}"
+                              method="post" style="display:inline">
+                            <button type="submit"
+                                    class="btn btn-danger"
+                                    onclick="return confirm('Delete this contact?');">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(contacts)}">
+                    <td colspan="19" class="text-muted">
+                        No contacts found.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</main>
 
 </body>
 </html>
