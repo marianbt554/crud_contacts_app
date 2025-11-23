@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Contacts</title>
+</head>
+<body>
+
+<h1>Contacts</h1>
+
+<!-- Link to create a new contact -->
+<p>
+    <a th:href="@{/contacts/new}">Create New Contact</a>
+</p>
+
+<!-- Search form (advanced search using ContactSearchCriteria) -->
+<form th:action="@{/contacts/search}" th:object="${criteria}" method="get">
+    <fieldset>
+        <legend>Search</legend>
+
+        <label>First name:
+            <input type="text" th:field="*{firstName}"/>
+        </label>
+
+        <label>Last name:
+            <input type="text" th:field="*{lastName}"/>
+        </label>
+
+        <label>Email:
+            <input type="text" th:field="*{email}"/>
+        </label>
+
+        <label>Institution:
+            <input type="text" th:field="*{institution}"/>
+        </label>
+
+        <label>Group:
+            <input type="text" th:field="*{persGroup}"/>
+        </label>
+
+        <label>Country:
+            <input type="text" th:field="*{country}"/>
+        </label>
+
+        <label>COIL experience:
+            <select th:field="*{coilExp}">
+                <option th:value="${null}">Any</option>
+                <option th:value="true">Yes</option>
+                <option th:value="false">No</option>
+            </select>
+        </label>
+
+        <label>Mobility funding:
+            <select th:field="*{mobilityFin}">
+                <option th:value="${null}">Any</option>
+                <option th:value="true">Yes</option>
+                <option th:value="false">No</option>
+            </select>
+        </label>
+
+        <label>Created after:
+            <input type="datetime-local" th:field="*{createdAfter}"/>
+        </label>
+
+        <label>Created before:
+            <input type="datetime-local" th:field="*{createdBefore}"/>
+        </label>
+
+        <button type="submit">Search</button>
+        <a th:href="@{/contacts}">Clear</a>
+    </fieldset>
+</form>
+
+<hr/>
+
+<!-- Contacts table -->
+<table border="1" cellpadding="4" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Email</th>
+        <th>Institution</th>
+        <th>Country</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="contact : ${contacts}">
+        <td th:text="${contact.id}">1</td>
+        <td th:text="${contact.title}">Mr</td>
+        <td th:text="${contact.firstName}">John</td>
+        <td th:text="${contact.lastName}">Doe</td>
+        <td th:text="${contact.email}">john@example.com</td>
+        <td th:text="${contact.institution}">Uni</td>
+        <td th:text="${contact.country}">Germany</td>
+        <td>
+            <a th:href="@{/contacts/{id}(id=${contact.id})}">View</a>
+            |
+            <a th:href="@{/contacts/{id}/edit(id=${contact.id})}">Edit</a>
+            |
+            <form th:action="@{/contacts/{id}/delete(id=${contact.id})}"
+                  method="post"
+                  style="display:inline">
+                <button type="submit"
+                        onclick="return confirm('Delete this contact?');">
+                    Delete
+                </button>
+            </form>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(contacts)}">
+        <td colspan="8">No contacts found.</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
