@@ -3,6 +3,10 @@ package com.marian_bt.contacts_app.service;
 
 import com.marian_bt.contacts_app.domain.Contact;
 import com.marian_bt.contacts_app.repository.ContactRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -136,6 +140,81 @@ public class ContactServiceImpl implements ContactService{
                 createdBefore,
                 updatedAfter,
                 updatedBefore
+        );
+    }
+
+    private Pageable withDefaultSort(Pageable pageable) {
+        if (pageable.getSort().isUnsorted()){
+            Sort defaultSort = Sort.by(
+                    Sort.Order.asc("lastName").ignoreCase(),
+                    Sort.Order.asc("firstName").ignoreCase()
+            );
+            return PageRequest.of(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    defaultSort
+            );
+        }
+        return pageable;
+    }
+
+    @Override
+    public Page<Contact> getAllContacts(Pageable pageable) {
+        Pageable sortedPageable = withDefaultSort(pageable);
+        return contactRepository.findAll(sortedPageable);
+    }
+
+    @Override
+    public Page<Contact> searchContacts(ContactSearchCriteria criteria, Pageable pageable) {
+        if (criteria == null || criteria.isEmpty()) {
+            return getAllContacts(pageable);
+        }
+
+        String firstName     = normalize(criteria.getFirstName());
+        String lastName      = normalize(criteria.getLastName());
+        String institution   = normalize(criteria.getInstitution());
+        String email         = normalize(criteria.getEmail());
+        String persGroup     = normalize(criteria.getPersGroup());
+        String country       = normalize(criteria.getCountry());
+        String fundUse       = normalize(criteria.getFundUse());
+        String postAddress   = normalize(criteria.getPostAddress());
+        String phone1        = normalize(criteria.getPhone1());
+        String phone2        = normalize(criteria.getPhone2());
+        String faculty       = normalize(criteria.getFaculty());
+        String studyDomain   = normalize(criteria.getStudyDomain());
+        String gender        = normalize(criteria.getGender());
+
+        LocalDateTime createdAfter  = criteria.getCreatedAfter();
+        LocalDateTime createdBefore = criteria.getCreatedBefore();
+        LocalDateTime updatedAfter  = criteria.getUpdatedAfter();
+        LocalDateTime updatedBefore = criteria.getUpdatedBefore();
+
+        Boolean coilExp     = criteria.getCoilExp();
+        Boolean mobilityFin = criteria.getMobilityFin();
+
+        Pageable sortedPageable = withDefaultSort(pageable);
+
+        return contactRepository.searchContactsPaged(
+                firstName,
+                lastName,
+                institution,
+                email,
+                persGroup,
+                country,
+                fundUse,
+                postAddress,
+                phone1,
+                phone2,
+                faculty,
+                studyDomain,
+                gender,
+                coilExp,
+                mobilityFin,
+                createdAfter,
+                createdBefore,
+                updatedAfter,
+                updatedBefore,
+                sortedPageable
         );
     }
 

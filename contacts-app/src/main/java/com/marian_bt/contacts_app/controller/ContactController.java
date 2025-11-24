@@ -4,11 +4,13 @@ package com.marian_bt.contacts_app.controller;
 import com.marian_bt.contacts_app.domain.Contact;
 import com.marian_bt.contacts_app.service.ContactSearchCriteria;
 import com.marian_bt.contacts_app.service.ContactService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Controller
 @RequestMapping("contacts")
@@ -22,19 +24,23 @@ public class ContactController  {
     }
 
     @GetMapping
-    public String ListContacts(Model model)
+    public String listContacts(@PageableDefault(size = 20) Pageable pageable, Model model)
     {
-        List<Contact> contacts = contactService.getAllContacts();
-        model.addAttribute("contacts", contacts);
+        Page<Contact> page = contactService.getAllContacts(pageable);
+        model.addAttribute("contactsPage", page);
+        model.addAttribute("contacts", page.getContent());
         model.addAttribute("criteria", new ContactSearchCriteria());
         return "contacts/list";
     }
 
     @GetMapping("/search")
-    public String SearchContacts(@ModelAttribute("criteria") ContactSearchCriteria criteria, Model model)
+    public String SearchContacts(@ModelAttribute("criteria") ContactSearchCriteria criteria,
+                                 @PageableDefault(size  = 20) Pageable pageable ,
+                                 Model model)
     {
-        List<Contact> contacts = contactService.searchContacts(criteria);
-        model.addAttribute("contacts", contacts);
+        Page<Contact> page = contactService.searchContacts(criteria, pageable);
+        model.addAttribute("contactsPage", page);
+        model.addAttribute("contacts", page.getContent());
         model.addAttribute("criteria", criteria);
         return "contacts/list";
     }
@@ -47,13 +53,6 @@ public class ContactController  {
         return "contacts/form";
     }
 
-    @PostMapping
-    public String createContact(@ModelAttribute("contact") Contact contact)
-    {
-        String currentUsername = "system";
-        contactService.createContact(contact, currentUsername);
-        return "redirect:/contacts";
-    }
 
     @GetMapping("/{id}/edit")
     public String ShowEditContactForm(@PathVariable("id") Long id, Model model)
