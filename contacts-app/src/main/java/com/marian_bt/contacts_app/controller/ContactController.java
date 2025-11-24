@@ -30,6 +30,7 @@ public class ContactController  {
         model.addAttribute("contactsPage", page);
         model.addAttribute("contacts", page.getContent());
         model.addAttribute("criteria", new ContactSearchCriteria());
+        model.addAttribute("baseUrl", "/contacts");
         return "contacts/list";
     }
 
@@ -42,6 +43,7 @@ public class ContactController  {
         model.addAttribute("contactsPage", page);
         model.addAttribute("contacts", page.getContent());
         model.addAttribute("criteria", criteria);
+        model.addAttribute("baseUrl", "/contacts/search");
         return "contacts/list";
     }
 
