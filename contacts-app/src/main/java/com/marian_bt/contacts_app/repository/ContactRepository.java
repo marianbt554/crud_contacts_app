@@ -11,15 +11,6 @@ import java.util.List;
 
 public interface ContactRepository extends JpaRepository <Contact, Long> {
 
-    List<Contact> findAllByFirstNameContainingIgnoreCase(String firstName);
-    List<Contact> findAllByLastNameContainingIgnoreCase(String lastName);
-    List<Contact> findAllByEmailContainingIgnoreCase(String email);
-    List<Contact> findAllByInstitutionContainingIgnoreCase(String institution);
-    List<Contact> findAllByCreatedAtAfter(LocalDateTime createdAt);
-    List<Contact> findAllByCreatedAtBefore(LocalDateTime createdAt);
-    List<Contact> findAllByCreatedAtBetween(LocalDateTime createdAtAfter, LocalDateTime createdAtBefore);
-    List<Contact> findAllByFunctionContainingIgnoreCase(String function);
-    List<Contact> findAllByCountryContainingIgnoreCase(String country);
 
     @Query("""
     SELECT c
@@ -43,6 +34,7 @@ public interface ContactRepository extends JpaRepository <Contact, Long> {
       AND (:createdBefore IS NULL OR c.createdAt          <= :createdBefore)
       AND (:updatedAfter  IS NULL OR c.updatedAt          >= :updatedAfter)
       AND (:updatedBefore IS NULL OR c.updatedAt          <= :updatedBefore)
+    ORDER BY c.lastName ASC, c.firstName ASC, c.id ASC      
     """)
     List<Contact> searchContacts(
             @Param("firstName")     String firstName,
