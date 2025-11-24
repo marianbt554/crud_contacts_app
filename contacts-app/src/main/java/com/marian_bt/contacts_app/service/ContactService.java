@@ -16,7 +16,7 @@ public interface ContactService {
     /*Update an existing contact method*/
     Contact updateContact(Long id, Contact updatedContact, String currentUsername);
 
-    /*Delete an existing contact method*/
+    /*Delete an existing contact method. currentUsername is kept for future auditing, even if not used yet.*/
     void deleteContact(Long id, String currentUsername);
 
     /*Search contacts using multiple search criteria*/
