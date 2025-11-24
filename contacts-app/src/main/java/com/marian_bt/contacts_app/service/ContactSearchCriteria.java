@@ -191,26 +191,30 @@ public class ContactSearchCriteria {
     }
 
     private boolean isEmpty(){
-        return firstName      == null &&
-                lastName      == null &&
-                institution   == null &&
-                email         == null &&
-                persGroup     == null &&
-                country       == null &&
-                coilExp       == null &&
-                mobilityFin   == null &&
-                fundUse       == null &&
-                postAddress   == null &&
-                phone1        == null &&
-                phone2        == null &&
-                faculty       == null &&
-                studyDomain   == null &&
-                gender        == null &&
-                createdAfter  == null &&
-                createdBefore == null &&
-                updatedAfter  == null &&
-                updatedBefore == null;
+        return isBlank(firstName)
+                && isBlank(lastName)
+                && isBlank(institution)
+                && isBlank(email)
+                && isBlank(persGroup)
+                && isBlank(country)
+                && isBlank(fundUse)
+                && isBlank(postAddress)
+                && isBlank(phone1)
+                && isBlank(phone2)
+                && isBlank(faculty)
+                && isBlank(studyDomain)
+                && isBlank(gender)
+                && coilExp == null
+                && mobilityFin == null
+                && createdAfter== null
+                && createdBefore == null
+                && updatedAfter == null
+                && updatedBefore == null;
 
+    }
+
+    private boolean isBlank(String value){
+        return value == null || value.trim().isEmpty();
     }
 
     @Override
