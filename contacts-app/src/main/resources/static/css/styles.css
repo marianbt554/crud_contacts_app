@@ -403,9 +403,7 @@ textarea.form-control {
     margin-bottom: 0.05rem;
 }
 
-.detail-value {
-    color: var(--text-main);
-}
+
 
 /* Required marker & help text */
 .required {
@@ -445,7 +443,7 @@ textarea.form-control {
 
 .detail-value {
     font-size: 0.95rem;
-    color: #111827;
+    color: var(--text-main);
 }
 
 /* Soft badges for email / country */
@@ -453,8 +451,8 @@ textarea.form-control {
     border-radius: 9999px;
     padding: 0.15rem 0.55rem;
     font-size: 0.8rem;
-    background: #eff6ff;
-    color: #1d4ed8;
+    background: var(--accent-soft);        /* translucent blue */
+    color: var(--accent);
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
@@ -464,6 +462,7 @@ textarea.form-control {
     border-radius: 9999px;
     padding: 0.15rem 0.55rem;
     font-size: 0.8rem;
-    background: #f3f4f6;
-    color: #4b5563;
+    background: rgba(15, 23, 42, 0.9);     /* dark chip */
+    color: var(--text-main);
+    border: 1px solid var(--border-subtle);
 }
