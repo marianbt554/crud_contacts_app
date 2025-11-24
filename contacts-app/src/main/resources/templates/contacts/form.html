@@ -15,9 +15,7 @@
             Contacts <span>Manager</span>
         </div>
         <div class="app-header-actions">
-            <span th:text="${contact.id} == null ? 'Create new contact' : 'Edit existing contact'">
-                Create new contact
-            </span>
+            <span th:text="${contact.id} == null ? 'Create new contact' : 'Edit contact'"></span>
         </div>
     </div>
 </div>
@@ -32,8 +30,11 @@
                     Contact Form
                 </h1>
                 <div class="card-subtitle">
-                    Fields marked with * are required.
+                    Fill in the fields below and click Save to persist the contact.
                 </div>
+            </div>
+            <div class="btn-row">
+                <a th:href="@{/contacts}" class="btn btn-ghost">← Back to list</a>
             </div>
         </div>
 
@@ -41,131 +42,149 @@
               th:action="@{/contacts/save}"
               method="post">
 
-            <!-- hidden ID for edit -->
+            <!-- Hidden ID for updates -->
             <input type="hidden" th:field="*{id}"/>
 
-            <!-- 2-column responsive grid -->
-            <div class="form-grid">
+            <!-- Basic info -->
+            <section class="form-section">
+                <h2 class="form-section-title">Basic information</h2>
+                <div class="form-grid">
 
-                <!-- Basic info -->
-                <div class="form-field">
-                    <label class="form-label">Title</label>
-                    <input type="text" th:field="*{title}" class="form-control"/>
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">First name *</label>
-                    <input type="text" th:field="*{firstName}" required class="form-control"/>
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Last name *</label>
-                    <input type="text" th:field="*{lastName}" required class="form-control"/>
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Gender *</label>
-                    <input type="text" th:field="*{gender}" required class="form-control"/>
-                </div>
-
-                <!-- Contact info -->
-                <div class="form-field">
-                    <label class="form-label">Email *</label>
-                    <input type="email" th:field="*{email}" required class="form-control"/>
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Phone 1</label>
-                    <input type="text" th:field="*{phone1}" class="form-control"/>
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Phone 2</label>
-                    <input type="text" th:field="*{phone2}" class="form-control"/>
-                </div>
-
-                <!-- Institution / academic -->
-                <div class="form-field">
-                    <label class="form-label">Institution *</label>
-                    <input type="text" th:field="*{institution}" required class="form-control"/>
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Faculty</label>
-                    <input type="text" th:field="*{faculty}" class="form-control"/>
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Study domain</label>
-                    <input type="text" th:field="*{studyDomain}" class="form-control"/>
-                </div>
-
-                <!-- Other info -->
-                <div class="form-field">
-                    <label class="form-label">Group</label>
-                    <input type="text" th:field="*{persGroup}" class="form-control"/>
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Function</label>
-                    <input type="text" th:field="*{function}" class="form-control"/>
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Country</label>
-                    <input type="text" th:field="*{country}" class="form-control"/>
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Post address</label>
-                    <input type="text" th:field="*{postAddress}" class="form-control"/>
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Interest</label>
-                    <input type="text" th:field="*{interest}" class="form-control"/>
-                </div>
-
-                <!-- Booleans -->
-                <div class="form-field">
-                    <label class="form-label">COIL experience</label>
-                    <div>
-                        <input type="checkbox" th:field="*{coilExp}"/>
-                        <span class="text-muted">Has COIL experience</span>
+                    <div class="form-field">
+                        <label class="form-label">Title</label>
+                        <input type="text" th:field="*{title}" class="form-control"/>
                     </div>
-                </div>
 
-                <div class="form-field">
-                    <label class="form-label">Mobility funding</label>
-                    <div>
-                        <input type="checkbox" th:field="*{mobilityFin}"/>
-                        <span class="text-muted">Has mobility funding</span>
+                    <div class="form-field">
+                        <label class="form-label">First name *</label>
+                        <input type="text" th:field="*{firstName}" class="form-control" required/>
                     </div>
-                </div>
 
-                <div class="form-field">
-                    <label class="form-label">Fund use</label>
-                    <input type="text" th:field="*{fundUse}" class="form-control"/>
-                </div>
+                    <div class="form-field">
+                        <label class="form-label">Last name *</label>
+                        <input type="text" th:field="*{lastName}" class="form-control" required/>
+                    </div>
 
-                <div class="form-field">
-                    <label class="form-label">Past event</label>
-                    <input type="text" th:field="*{pastEvent}" class="form-control"/>
-                </div>
+                    <div class="form-field">
+                        <label class="form-label">Gender *</label>
+                        <input type="text" th:field="*{gender}" class="form-control" required/>
+                    </div>
 
-                <div class="form-field">
-                    <label class="form-label">Contact person</label>
-                    <input type="text" th:field="*{contactPerson}" class="form-control"/>
                 </div>
-            </div>
+            </section>
 
-            <!-- Comments full-width -->
-            <div class="mt-2">
-                <div class="form-field">
-                    <label class="form-label">Comments</label>
-                    <textarea th:field="*{comments}" class="form-control"></textarea>
+            <!-- Contact info -->
+            <section class="form-section">
+                <h2 class="form-section-title">Contact details</h2>
+                <div class="form-grid">
+
+                    <div class="form-field">
+                        <label class="form-label">Email *</label>
+                        <input type="email" th:field="*{email}" class="form-control" required/>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label">Phone 1</label>
+                        <input type="text" th:field="*{phone1}" class="form-control"/>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label">Phone 2</label>
+                        <input type="text" th:field="*{phone2}" class="form-control"/>
+                    </div>
+
+                    <div class="form-field form-field-full">
+                        <label class="form-label">Post address</label>
+                        <input type="text" th:field="*{postAddress}" class="form-control"/>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label">Country</label>
+                        <input type="text" th:field="*{country}" class="form-control"/>
+                    </div>
+
                 </div>
-            </div>
+            </section>
+
+            <!-- Academic / institution info -->
+            <section class="form-section">
+                <h2 class="form-section-title">Institution & academic</h2>
+                <div class="form-grid">
+
+                    <div class="form-field form-field-full">
+                        <label class="form-label">Institution *</label>
+                        <input type="text" th:field="*{institution}" class="form-control" required/>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label">Faculty</label>
+                        <input type="text" th:field="*{faculty}" class="form-control"/>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label">Study domain</label>
+                        <input type="text" th:field="*{studyDomain}" class="form-control"/>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label">Group</label>
+                        <input type="text" th:field="*{persGroup}" class="form-control"/>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label">Function</label>
+                        <input type="text" th:field="*{function}" class="form-control"/>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Other info -->
+            <section class="form-section">
+                <h2 class="form-section-title">Additional details</h2>
+                <div class="form-grid">
+
+                    <div class="form-field">
+                        <label class="form-label">Interest</label>
+                        <input type="text" th:field="*{interest}" class="form-control"/>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label">Fund use</label>
+                        <input type="text" th:field="*{fundUse}" class="form-control"/>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label">Past event</label>
+                        <input type="text" th:field="*{pastEvent}" class="form-control"/>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label">Contact person</label>
+                        <input type="text" th:field="*{contactPerson}" class="form-control"/>
+                    </div>
+
+                    <div class="form-field checkbox-field">
+                        <label class="form-label-inline">
+                            <input type="checkbox" th:field="*{coilExp}"/>
+                            COIL experience
+                        </label>
+                    </div>
+
+                    <div class="form-field checkbox-field">
+                        <label class="form-label-inline">
+                            <input type="checkbox" th:field="*{mobilityFin}"/>
+                            Mobility funding
+                        </label>
+                    </div>
+
+                    <div class="form-field form-field-full">
+                        <label class="form-label">Comments</label>
+                        <textarea th:field="*{comments}" class="form-control" rows="3"></textarea>
+                    </div>
+
+                </div>
+            </section>
 
             <!-- Buttons -->
             <div class="form-footer">
