@@ -6,6 +6,7 @@ import com.marian_bt.contacts_app.repository.ContactRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -18,7 +19,11 @@ public class ContactServiceImpl implements ContactService{
 
     @Override
     public List<Contact> getAllContacts() {
-        return contactRepository.findAll();
+        List<Contact> all = contactRepository.findAll();
+        all.sort(Comparator
+                .comparing(Contact::getLastName, Comparator.nullsLast(String::compareToIgnoreCase))
+                .thenComparing(Contact::getFirstName, Comparator.nullsLast(String::compareToIgnoreCase)));
+        return all;
     }
 
     @Override
@@ -78,11 +83,15 @@ public class ContactServiceImpl implements ContactService{
         if (!contactRepository.existsById(id)) {
             throw new RuntimeException("Contact not found with id: " + id);
         }
+        //change later to something that would return: "User X deleted contact Y"
         contactRepository.deleteById(id);
     }
 
     @Override
     public List<Contact> searchContacts(ContactSearchCriteria criteria) {
+        if (criteria == null || criteria.isEmpty()) {
+            return getAllContacts();
+        }
         String firstName     = normalize(criteria.getFirstName());
         String lastName      = normalize(criteria.getLastName());
         String institution   = normalize(criteria.getInstitution());

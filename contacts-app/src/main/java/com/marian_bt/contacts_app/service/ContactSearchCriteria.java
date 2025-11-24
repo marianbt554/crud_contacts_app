@@ -190,7 +190,7 @@ public class ContactSearchCriteria {
         this.updatedBefore = updatedBefore;
     }
 
-    private boolean isEmpty(){
+    public boolean isEmpty(){
         return isBlank(firstName)
                 && isBlank(lastName)
                 && isBlank(institution)
