@@ -56,10 +56,10 @@ public class Contact  {
     @NotBlank
     @Column(nullable = false)
     @Pattern(
-            regexp = "^(?i)(male | female | diverse)",
+            regexp = "^(?i)(male|female|diverse)$",
             message = "Gender must be one of : male, female, diverse."
     )
-    private String           gender;
+    private String gender;
     private String           comments;
     private LocalDateTime    createdAt;
     private LocalDateTime    updatedAt;
@@ -244,11 +244,15 @@ public class Contact  {
     }
 
     public String getGender() {
-        return gender;
+       return gender;
     }
 
     public void setGender(String gender) {
-        this.gender = gender;
+        if (gender == null) {
+            this.gender = null;
+        } else {
+            this.gender = gender.trim().toLowerCase();
+        }
     }
 
     public String getComments() {
