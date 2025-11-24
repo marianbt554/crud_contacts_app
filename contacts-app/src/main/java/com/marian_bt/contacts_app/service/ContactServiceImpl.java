@@ -50,7 +50,7 @@ public class ContactServiceImpl implements ContactService{
     @Override
     public Contact updateContact(Long id, Contact updatedContact, String currentUsername) {
         Contact existing = contactRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Contact not found with id: " + id));
+                .orElseThrow(() -> new ContactNotFoundException(id));
 
         existing.setTitle(updatedContact.getTitle());
         existing.setFirstName(updatedContact.getFirstName());
@@ -85,7 +85,7 @@ public class ContactServiceImpl implements ContactService{
     @Override
     public void deleteContact(Long id, String currentUsername) {
         if (!contactRepository.existsById(id)) {
-            throw new RuntimeException("Contact not found with id: " + id);
+            throw new ContactNotFoundException(id);
         }
         //change later to something that would return: "User X deleted contact Y"
         contactRepository.deleteById(id);
