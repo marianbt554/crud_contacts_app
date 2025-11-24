@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="page-root">
+
+<div class="app-header">
+    <div class="app-header-inner">
+        <div class="app-title">
+            Contacts <span>Manager</span>
+        </div>
+        <div class="app-header-actions">
+            <span>Unexpected error</span>
+        </div>
+    </div>
+</div>
+
+<main class="app-main">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h1 class="card-title">Something went wrong</h1>
+                <div class="card-subtitle">
+                    We couldn’t process your request. Please try again.
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-error">
+            <span th:text="${message}">An unexpected error occurred.</span>
+        </div>
+
+        <div class="btn-row">
+            <a th:href="@{/contacts}" class="btn btn-primary">← Back to contacts</a>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

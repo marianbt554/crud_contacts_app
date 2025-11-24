@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact not found</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="page-root">
+
+<div class="app-header">
+    <div class="app-header-inner">
+        <div class="app-title">
+            Contacts <span>Manager</span>
+        </div>
+        <div class="app-header-actions">
+            <span>Oops… something went wrong</span>
+        </div>
+    </div>
+</div>
+
+<main class="app-main">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h1 class="card-title">Contact not found</h1>
+                <div class="card-subtitle">
+                    The contact you are trying to access does not exist or was removed.
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-error">
+            <span th:text="${message}">Contact not found.</span>
+        </div>
+
+        <div class="btn-row">
+            <a th:href="@{/contacts}" class="btn btn-primary">← Back to contacts</a>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>
