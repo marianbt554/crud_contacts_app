@@ -23,14 +23,9 @@
 
         <div class="card-header">
             <div>
-                <h1 class="card-title">
-                    <span th:text="${contact.firstName} + ' ' + ${contact.lastName}">John Doe</span>
-                </h1>
+                <h1 class="card-title">Contact details</h1>
                 <div class="card-subtitle">
-                    <span th:text="${contact.institution}">Institution</span>
-                    <span th:if="${contact.country != null and !#strings.isEmpty(contact.country)}">
-                        · <span th:text="${contact.country}">Country</span>
-                    </span>
+                    Overview of all information for this contact.
                 </div>
             </div>
             <div class="btn-row">
@@ -39,152 +34,201 @@
             </div>
         </div>
 
-        <div class="detail-layout" th:if="${contact != null}">
+        <div th:if="${contact != null}">
+            <!-- Basic info -->
+            <section class="form-section">
+                <h2 class="form-section-title">Basic information</h2>
+                <div class="detail-grid">
 
-            <!-- Left: main fields -->
-            <section class="detail-section">
-                <h2 class="detail-section-title">Profile</h2>
-                <dl class="detail-grid">
-                    <div class="detail-row">
-                        <dt>ID</dt>
-                        <dd th:text="${contact.id}">1</dd>
+                    <div class="detail-item">
+                        <div class="detail-label">ID</div>
+                        <div class="detail-value" th:text="${contact.id}">1</div>
                     </div>
-                    <div class="detail-row">
-                        <dt>Title</dt>
-                        <dd th:text="${contact.title}">Mr</dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>First name</dt>
-                        <dd th:text="${contact.firstName}">John</dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Last name</dt>
-                        <dd th:text="${contact.lastName}">Doe</dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Gender</dt>
-                        <dd th:text="${contact.gender}">M</dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Group</dt>
-                        <dd th:text="${contact.persGroup}">Group</dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Function</dt>
-                        <dd th:text="${contact.function}">Professor</dd>
-                    </div>
-                </dl>
 
-                <h2 class="detail-section-title">Contact</h2>
-                <dl class="detail-grid">
-                    <div class="detail-row">
-                        <dt>Email</dt>
-                        <dd>
-                            <a th:href="'mailto:' + ${contact.email}"
-                               th:text="${contact.email}">john@example.com</a>
-                        </dd>
+                    <div class="detail-item">
+                        <div class="detail-label">Title</div>
+                        <div class="detail-value" th:text="${contact.title}">Mr</div>
                     </div>
-                    <div class="detail-row">
-                        <dt>Phone 1</dt>
-                        <dd th:text="${contact.phone1}">+49...</dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Phone 2</dt>
-                        <dd th:text="${contact.phone2}">+49...</dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Post address</dt>
-                        <dd th:text="${contact.postAddress}">Address</dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Country</dt>
-                        <dd th:text="${contact.country}">Germany</dd>
-                    </div>
-                </dl>
 
-                <h2 class="detail-section-title">Institution & academic</h2>
-                <dl class="detail-grid">
-                    <div class="detail-row">
-                        <dt>Institution</dt>
-                        <dd th:text="${contact.institution}">Uni</dd>
+                    <div class="detail-item">
+                        <div class="detail-label">First name</div>
+                        <div class="detail-value" th:text="${contact.firstName}">John</div>
                     </div>
-                    <div class="detail-row">
-                        <dt>Faculty</dt>
-                        <dd th:text="${contact.faculty}">Faculty</dd>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Last name</div>
+                        <div class="detail-value" th:text="${contact.lastName}">Doe</div>
                     </div>
-                    <div class="detail-row">
-                        <dt>Study domain</dt>
-                        <dd th:text="${contact.studyDomain}">CS</dd>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Gender</div>
+                        <div class="detail-value badge badge-soft" th:text="${contact.gender}">male</div>
                     </div>
-                </dl>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Group</div>
+                        <div class="detail-value" th:text="${contact.persGroup}">Group</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Function</div>
+                        <div class="detail-value" th:text="${contact.function}">Professor</div>
+                    </div>
+
+                </div>
             </section>
 
-            <!-- Right: flags, meta, comments -->
-            <section class="detail-section detail-section-side">
-                <h2 class="detail-section-title">Flags</h2>
-                <dl class="detail-grid">
-                    <div class="detail-row">
-                        <dt>COIL experience</dt>
-                        <dd>
+            <!-- Contact details -->
+            <section class="form-section">
+                <h2 class="form-section-title">Contact details</h2>
+                <div class="detail-grid">
+
+                    <div class="detail-item">
+                        <div class="detail-label">Email</div>
+                        <div class="detail-value">
+                            <a th:href="|mailto:${contact.email}|"
+                               th:text="${contact.email}"
+                               class="badge badge-soft">
+                                john@example.com
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Phone 1</div>
+                        <div class="detail-value" th:text="${contact.phone1}">+49...</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Phone 2</div>
+                        <div class="detail-value" th:text="${contact.phone2}">+49...</div>
+                    </div>
+
+                    <div class="detail-item detail-item-full">
+                        <div class="detail-label">Post address</div>
+                        <div class="detail-value" th:text="${contact.postAddress}">Address</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Country</div>
+                        <div class="detail-value">
+                            <span class="badge badge-neutral"
+                                  th:text="${contact.country}">Germany</span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Institution & academic -->
+            <section class="form-section">
+                <h2 class="form-section-title">Institution & academic</h2>
+                <div class="detail-grid">
+
+                    <div class="detail-item detail-item-full">
+                        <div class="detail-label">Institution</div>
+                        <div class="detail-value" th:text="${contact.institution}">Uni</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Faculty</div>
+                        <div class="detail-value" th:text="${contact.faculty}">Faculty</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Study domain</div>
+                        <div class="detail-value" th:text="${contact.studyDomain}">CS</div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Additional -->
+            <section class="form-section">
+                <h2 class="form-section-title">Additional details</h2>
+                <div class="detail-grid">
+
+                    <div class="detail-item">
+                        <div class="detail-label">Interest</div>
+                        <div class="detail-value" th:text="${contact.interest}">Interest</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Fund use</div>
+                        <div class="detail-value" th:text="${contact.fundUse}">fund?</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Past event</div>
+                        <div class="detail-value" th:text="${contact.pastEvent}">event</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Contact person</div>
+                        <div class="detail-value" th:text="${contact.contactPerson}">person</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">COIL experience</div>
+                        <div class="detail-value">
                             <span th:if="${contact.coilExp}" class="badge badge-yes">Yes</span>
                             <span th:if="${!contact.coilExp}" class="badge badge-no">No</span>
-                        </dd>
+                        </div>
                     </div>
-                    <div class="detail-row">
-                        <dt>Mobility funding</dt>
-                        <dd>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Mobility funding</div>
+                        <div class="detail-value">
                             <span th:if="${contact.mobilityFin}" class="badge badge-yes">Yes</span>
                             <span th:if="${!contact.mobilityFin}" class="badge badge-no">No</span>
-                        </dd>
+                        </div>
                     </div>
-                    <div class="detail-row">
-                        <dt>Fund use</dt>
-                        <dd th:text="${contact.fundUse}">fund?</dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Past event</dt>
-                        <dd th:text="${contact.pastEvent}">event</dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Contact person</dt>
-                        <dd th:text="${contact.contactPerson}">person</dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Interest</dt>
-                        <dd th:text="${contact.interest}">Interest</dd>
-                    </div>
-                </dl>
 
-                <h2 class="detail-section-title">Comments</h2>
-                <div class="detail-comments"
-                     th:text="${#strings.isEmpty(contact.comments) ? 'No comments.' : contact.comments}">
-                    comments...
+                    <div class="detail-item detail-item-full">
+                        <div class="detail-label">Comments</div>
+                        <div class="detail-value" th:text="${contact.comments}">comments...</div>
+                    </div>
+
                 </div>
-
-                <h2 class="detail-section-title">Audit trail</h2>
-                <dl class="detail-grid">
-                    <div class="detail-row">
-                        <dt>Created at</dt>
-                        <dd th:text="${contact.createdAt != null ? #temporals.format(contact.createdAt, 'yyyy-MM-dd HH:mm') : ''}">
-                            2025-01-01
-                        </dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Created by</dt>
-                        <dd th:text="${contact.createdBy}">user</dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Updated at</dt>
-                        <dd th:text="${contact.updatedAt != null ? #temporals.format(contact.updatedAt, 'yyyy-MM-dd HH:mm') : ''}">
-                            2025-01-02
-                        </dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Updated by</dt>
-                        <dd th:text="${contact.updatedBy}">user</dd>
-                    </div>
-                </dl>
             </section>
+
+            <!-- Audit -->
+            <section class="form-section">
+                <h2 class="form-section-title">Audit</h2>
+                <div class="detail-grid">
+
+                    <div class="detail-item">
+                        <div class="detail-label">Created at</div>
+                        <div class="detail-value"
+                             th:text="${contact.createdAt != null ? #temporals.format(contact.createdAt, 'yyyy-MM-dd HH:mm') : ''}">
+                            2025-01-01 10:00
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Created by</div>
+                        <div class="detail-value" th:text="${contact.createdBy}">user</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Updated at</div>
+                        <div class="detail-value"
+                             th:text="${contact.updatedAt != null ? #temporals.format(contact.updatedAt, 'yyyy-MM-dd HH:mm') : ''}">
+                            2025-01-02 11:00
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Updated by</div>
+                        <div class="detail-value" th:text="${contact.updatedBy}">user</div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+
+        <div th:if="${contact == null}" class="text-muted" style="padding: 1rem;">
+            Contact not found.
         </div>
 
     </div>
