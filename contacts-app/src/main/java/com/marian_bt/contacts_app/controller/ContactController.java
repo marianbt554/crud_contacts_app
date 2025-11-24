@@ -4,11 +4,13 @@ package com.marian_bt.contacts_app.controller;
 import com.marian_bt.contacts_app.domain.Contact;
 import com.marian_bt.contacts_app.service.ContactSearchCriteria;
 import com.marian_bt.contacts_app.service.ContactService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -65,9 +67,15 @@ public class ContactController  {
     }
 
     @PostMapping("/save")
-    public String saveContact(@ModelAttribute("contact") Contact contact) {
+    public String saveContact(@Valid @ModelAttribute("contact") Contact contact,
+                              BindingResult bindingResult,
+                              Model model) {
         String currentUsername = "system"; // later from Spring Security
 
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("hasErrors", true);
+            return "contacts/form";
+        }
         if (contact.getId() == null) {
             // no id -> create
             contactService.createContact(contact, currentUsername);

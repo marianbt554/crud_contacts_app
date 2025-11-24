@@ -48,6 +48,11 @@
             <!-- Hidden ID for updates -->
             <input type="hidden" th:field="*{id}"/>
 
+            <!-- Global error alert -->
+            <div class="alert alert-error" th:if="${#fields.hasAnyErrors()}">
+                Please fix the highlighted fields below.
+            </div>
+
             <!-- Basic info -->
             <section class="form-section">
                 <h2 class="form-section-title">Basic information</h2>
@@ -59,32 +64,49 @@
                     </div>
 
                     <div class="form-field">
-                        <label class="form-label">
-                            First name <span class="required">*</span>
-                        </label>
-                        <input type="text" th:field="*{firstName}" class="form-control" required/>
+                        <label class="form-label">First name *</label>
+                        <input type="text"
+                               th:field="*{firstName}"
+                               class="form-control"
+                               th:classappend="${#fields.hasErrors('firstName')} ? ' form-control-error'"
+                               required/>
+                        <div class="field-error"
+                             th:if="${#fields.hasErrors('firstName')}"
+                             th:errors="*{firstName}">
+                        </div>
                     </div>
 
                     <div class="form-field">
-                        <label class="form-label">
-                            Last name <span class="required">*</span>
-                        </label>
-                        <input type="text" th:field="*{lastName}" class="form-control" required/>
+                        <label class="form-label">Last name *</label>
+                        <input type="text"
+                               th:field="*{lastName}"
+                               class="form-control"
+                               th:classappend="${#fields.hasErrors('lastName')} ? ' form-control-error'"
+                               required/>
+                        <div class="field-error"
+                             th:if="${#fields.hasErrors('lastName')}"
+                             th:errors="*{lastName}">
+                        </div>
                     </div>
 
                     <div class="form-field">
-                        <label class="form-label">
-                            Gender <span class="required">*</span>
-                        </label>
-                        <select th:field="*{gender}" class="form-select" required>
+                        <label class="form-label">Gender *</label>
+                        <select th:field="*{gender}"
+                                class="form-select"
+                                th:classappend="${#fields.hasErrors('gender')} ? ' form-control-error'"
+                                required>
                             <option value="">Select gender</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                             <option value="diverse">Diverse</option>
                         </select>
+                        <div class="field-error"
+                             th:if="${#fields.hasErrors('gender')}"
+                             th:errors="*{gender}">
+                        </div>
                     </div>
-
                 </div>
+
             </section>
 
             <!-- Contact info -->
@@ -93,10 +115,16 @@
                 <div class="form-grid">
 
                     <div class="form-field">
-                        <label class="form-label">
-                            Email <span class="required">*</span>
-                        </label>
-                        <input type="email" th:field="*{email}" class="form-control" required/>
+                        <label class="form-label">Email *</label>
+                        <input type="email"
+                               th:field="*{email}"
+                               class="form-control"
+                               th:classappend="${#fields.hasErrors('email')} ? ' form-control-error'"
+                               required/>
+                        <div class="field-error"
+                             th:if="${#fields.hasErrors('email')}"
+                             th:errors="*{email}">
+                        </div>
                     </div>
 
                     <div class="form-field">
@@ -128,10 +156,16 @@
                 <div class="form-grid">
 
                     <div class="form-field form-field-full">
-                        <label class="form-label">
-                            Institution <span class="required">*</span>
-                        </label>
-                        <input type="text" th:field="*{institution}" class="form-control" required/>
+                        <label class="form-label">Institution *</label>
+                        <input type="text"
+                               th:field="*{institution}"
+                               class="form-control"
+                               th:classappend="${#fields.hasErrors('institution')} ? ' form-control-error'"
+                               required/>
+                        <div class="field-error"
+                             th:if="${#fields.hasErrors('institution')}"
+                             th:errors="*{institution}">
+                        </div>
                     </div>
 
                     <div class="form-field">
