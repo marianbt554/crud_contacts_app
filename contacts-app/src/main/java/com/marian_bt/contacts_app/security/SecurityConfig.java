@@ -3,6 +3,7 @@ package com.marian_bt.contacts_app.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -21,9 +22,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.
                 authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**","/js/**","/images/**","/webjars/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/","/login").permitAll()
+                        .requestMatchers("/css/**","/login").permitAll()
+
+                        .requestMatchers(HttpMethod.GET,"/contacts/**").hasAnyRole("USER", "ADMIN")
+
+                        .requestMatchers(HttpMethod.POST,"/contacts/**").hasAnyRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -37,7 +41,6 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 );
-        http.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
         return http.build();
     }
 
@@ -46,12 +49,5 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder.encode("admin123"))
-                .roles("ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(admin);
-    }
+
 }
