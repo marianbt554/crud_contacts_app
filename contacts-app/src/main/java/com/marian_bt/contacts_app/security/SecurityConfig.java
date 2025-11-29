@@ -25,7 +25,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**","/login").permitAll()
 
                         .requestMatchers(HttpMethod.GET,"/contacts/new",
-                                "contacts/*/edit").hasRole("ADMIN")
+                                "/contacts/*/edit").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST,"/contacts/**").hasRole("ADMIN")
 
