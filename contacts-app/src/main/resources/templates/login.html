@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login · Contacts Manager</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="page-root">
+
+<div class="app-header">
+    <div class="app-header-inner">
+        <div class="app-title">
+            Contacts <span>Manager</span>
+        </div>
+        <div class="app-header-actions">
+            <span>Sign in to continue</span>
+        </div>
+    </div>
+</div>
+
+<main class="app-main">
+    <div class="card">
+
+        <div class="card-header">
+            <div>
+                <h1 class="card-title">Sign in</h1>
+                <div class="card-subtitle">
+                    Enter your credentials to access the contacts.
+                </div>
+            </div>
+        </div>
+
+        <!-- Error / logout messages -->
+        <div th:if="${param.error}" class="alert alert-danger">
+            Invalid username or password.
+        </div>
+
+        <div th:if="${param.logout}" class="alert alert-success">
+            You have been logged out.
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" autofocus>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <span class="text-muted">
+                    Dev login: <code>admin / admin123</code>
+                </span>
+                <div class="form-footer-right">
+                    <button type="submit" class="btn btn-primary">Sign in</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</main>
+
+</body>
+</html>

@@ -493,3 +493,23 @@ textarea.form-control {
     border-color: rgba(248, 113, 113, 0.8) !important;
     box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.45);
 }
+
+
+.alert {
+    border-radius: var(--radius-md);
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+}
+
+.alert-danger {
+    background: var(--danger-soft);
+    color: #fecaca;
+    border: 1px solid var(--danger);
+}
+
+.alert-success {
+    background: var(--success-soft);
+    color: #bbf7d0;
+    border: 1px solid var(--success);
+}
