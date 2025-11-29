@@ -1,4 +1,4 @@
-package com.marian_bt.contacts_app.config;
+package com.marian_bt.contacts_app.security;
 
 
 import org.springframework.context.annotation.Bean;
