@@ -33,6 +33,7 @@ public class Contact  {
     @Column(nullable = false)
     private String           lastName;
     private String           persGroup;
+    @Column(name = "job_function")
     private String           function;
     @NotBlank
     @Column(nullable = false)
