@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <title>Contact Details</title>
@@ -13,8 +15,24 @@
             Contacts <span>Manager</span>
         </div>
         <div class="app-header-actions">
-            <span>Contact details</span>
+            <span>Contacts CRUD · Spring Boot</span>
+
+            <span sec:authorize="isAuthenticated()" style="margin-left: 0.5rem;">
+        · Logged in as <strong sec:authentication="name"></strong>
+    </span>
+
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}"/>
+
+                <button type="submit" class="btn btn-ghost">
+                    Logout
+                </button>
+            </form>
+
         </div>
+
     </div>
 </div>
 
