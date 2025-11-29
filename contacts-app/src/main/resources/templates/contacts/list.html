@@ -201,16 +201,20 @@
 
                     <td class="actions-cell">
                         <a th:href="@{/contacts/{id}(id=${contact.id})}" class="btn btn-ghost">View</a>
-                        <a th:href="@{/contacts/{id}/edit(id=${contact.id})}" class="btn btn-secondary">Edit</a>
-                        <form th:action="@{/contacts/{id}/delete(id=${contact.id})}"
-                              method="post" style="display:inline">
-                            <button type="submit"
-                                    class="btn btn-danger"
-                                    onclick="return confirm('Delete this contact?');">
-                                Delete
-                            </button>
-                        </form>
+
+                        <span sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/contacts/{id}/edit(id=${contact.id})}" class="btn btn-secondary">Edit</a>
+        <form th:action="@{/contacts/{id}/delete(id=${contact.id})}"
+              method="post" style="display:inline">
+            <button type="submit"
+                    class="btn btn-danger"
+                    onclick="return confirm('Delete this contact?');">
+                Delete
+            </button>
+        </form>
+    </span>
                     </td>
+
                 </tr>
 
                 <tr th:if="${#lists.isEmpty(contacts)}">
