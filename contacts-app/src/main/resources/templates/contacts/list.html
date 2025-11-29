@@ -48,8 +48,12 @@
                 </div>
             </div>
             <div class="btn-row">
-                <a th:href="@{/contacts/new}" class="btn btn-primary">+ New contact</a>
+                <a th:href="@{/contacts/new}" class="btn btn-primary"
+                   sec:authorize="hasRole('ADMIN')">
+                    + New contact
+                </a>
             </div>
+
         </div>
 
         <!-- Search form (advanced search using ContactSearchCriteria) -->
@@ -214,6 +218,7 @@
         </form>
     </span>
                     </td>
+
 
                 </tr>
 

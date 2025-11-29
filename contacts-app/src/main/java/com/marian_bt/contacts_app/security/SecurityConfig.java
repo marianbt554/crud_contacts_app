@@ -24,16 +24,23 @@ public class SecurityConfig {
                 authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**","/login").permitAll()
 
-                        .requestMatchers(HttpMethod.GET,"/contacts/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/contacts/new",
+                                "contacts/*/edit").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.POST,"/contacts/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/contacts/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/contacts",
+                                "/contacts/",
+                                "/contacts/search",
+                                "/contacts/export",
+                                "/contacts/*").hasAnyRole("ADMIN","USER")
 
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login").permitAll()
                         .defaultSuccessUrl("/contacts", true)
-                        .failureUrl("/login?error")
                         .permitAll()
                 )
                 .logout(logout -> logout
