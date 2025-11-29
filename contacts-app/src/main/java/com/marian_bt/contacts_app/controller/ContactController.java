@@ -108,8 +108,12 @@ public class ContactController  {
         return "contacts/detail";
     }
 
-    @GetMapping("/contacts/export")
-    public void exportContacts(ContactSearchCriteria criteria, HttpServletResponse response) throws IOException {
+    @GetMapping("/export")
+    public void exportContacts(@ModelAttribute ContactSearchCriteria criteria, HttpServletResponse response) throws IOException {
+
+        if (criteria == null) {
+            criteria = new ContactSearchCriteria();
+        }
 
         List<Contact> contacts = contactService.searchContacts(criteria);
 
