@@ -1,6 +1,5 @@
 package com.marian_bt.contacts_app.controller;
 
-
 import com.marian_bt.contacts_app.domain.Contact;
 import com.marian_bt.contacts_app.service.ContactSearchCriteria;
 import com.marian_bt.contacts_app.service.ContactService;
@@ -16,18 +15,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-
 @Controller
 @RequestMapping("contacts")
-
-public class ContactController  {
+public class ContactController {
 
     private final ContactService contactService;
 
@@ -35,21 +31,17 @@ public class ContactController  {
         this.contactService = contactService;
     }
 
-    public String getCurrentUsername(){
+
+    private String getCurrentUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth != null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
-
+        if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return "system";
-
         }
-
         return auth.getName();
     }
 
     @GetMapping
-    public String listContacts(@PageableDefault(size = 20) Pageable pageable, Model model)
-    {
+    public String listContacts(@PageableDefault(size = 20) Pageable pageable, Model model) {
         Page<Contact> page = contactService.getAllContacts(pageable);
         model.addAttribute("contactsPage", page);
         model.addAttribute("contacts", page.getContent());
@@ -60,9 +52,8 @@ public class ContactController  {
 
     @GetMapping("/search")
     public String SearchContacts(@ModelAttribute("criteria") ContactSearchCriteria criteria,
-                                 @PageableDefault(size  = 20) Pageable pageable ,
-                                 Model model)
-    {
+                                 @PageableDefault(size = 20) Pageable pageable,
+                                 Model model) {
         Page<Contact> page = contactService.searchContacts(criteria, pageable);
         model.addAttribute("contactsPage", page);
         model.addAttribute("contacts", page.getContent());
@@ -72,17 +63,14 @@ public class ContactController  {
     }
 
     @GetMapping("/new")
-    public String ShowCreateContactForm(Model model)
-    {
+    public String ShowCreateContactForm(Model model) {
         Contact contact = new Contact();
         model.addAttribute("contact", contact);
         return "contacts/form";
     }
 
-
     @GetMapping("/{id}/edit")
-    public String ShowEditContactForm(@PathVariable("id") Long id, Model model)
-    {
+    public String ShowEditContactForm(@PathVariable("id") Long id, Model model) {
         Contact contact = contactService.getContactById(id);
         model.addAttribute("contact", contact);
         return "contacts/form";
@@ -93,7 +81,6 @@ public class ContactController  {
                               BindingResult bindingResult,
                               Model model) {
 
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("hasErrors", true);
             return "contacts/form";
@@ -102,10 +89,10 @@ public class ContactController  {
         String currentUsername = getCurrentUsername();
 
         if (contact.getId() == null) {
-
+            // create
             contactService.createContact(contact, currentUsername);
         } else {
-
+            // update
             contactService.updateContact(contact.getId(), contact, currentUsername);
         }
 
@@ -113,23 +100,22 @@ public class ContactController  {
     }
 
     @PostMapping("/{id}/delete")
-    public String deleteContact (@PathVariable("id") Long id){
-
-        String currentUsername = getCurrentUsername();
-
+    public String deleteContact(@PathVariable("id") Long id) {
+        String currentUsername = getCurrentUsername();   // for future logging if needed
         contactService.deleteContact(id, currentUsername);
         return "redirect:/contacts";
     }
 
     @GetMapping("/{id}")
-    public String viewContact(@PathVariable("id") Long id, Model model){
+    public String viewContact(@PathVariable("id") Long id, Model model) {
         Contact contact = contactService.getContactById(id);
         model.addAttribute("contact", contact);
         return "contacts/detail";
     }
 
     @GetMapping("/export")
-    public void exportContacts(@ModelAttribute ContactSearchCriteria criteria, HttpServletResponse response) throws IOException {
+    public void exportContacts(@ModelAttribute ContactSearchCriteria criteria,
+                               HttpServletResponse response) throws IOException {
 
         if (criteria == null) {
             criteria = new ContactSearchCriteria();
@@ -139,28 +125,27 @@ public class ContactController  {
 
         response.setContentType("text/csv;charset=UTF-8");
         String fileName = "contacts-" + LocalDateTime.now() + ".csv";
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName);
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-        try(PrintWriter writer = response.getWriter()) {
+        try (PrintWriter writer = response.getWriter()) {
             writer.println("id,title,firstName,lastName,gender,email,phone1,phone2,institution,faculty,studyDomain,persGroup,function,country,coilExp,mobilityFin,createdAt,updatedAt");
             for (Contact c : contacts) {
-                writer.print(safe(c.getId()));
-                writer.print(',');
-                writer.print(csv(c.getTitle()));           writer.print(',');
-                writer.print(csv(c.getFirstName()));       writer.print(',');
-                writer.print(csv(c.getLastName()));        writer.print(',');
-                writer.print(csv(c.getGender()));          writer.print(',');
-                writer.print(csv(c.getEmail()));           writer.print(',');
-                writer.print(csv(c.getPhone1()));          writer.print(',');
-                writer.print(csv(c.getPhone2()));          writer.print(',');
-                writer.print(csv(c.getInstitution()));     writer.print(',');
-                writer.print(csv(c.getFaculty()));         writer.print(',');
-                writer.print(csv(c.getStudyDomain()));     writer.print(',');
-                writer.print(csv(c.getPersGroup()));       writer.print(',');
-                writer.print(csv(c.getFunction()));        writer.print(',');
-                writer.print(csv(c.getCountry()));         writer.print(',');
-                writer.print(csv(Boolean.toString(c.isCoilExp())));    writer.print(',');
+                writer.print(safe(c.getId()));           writer.print(',');
+                writer.print(csv(c.getTitle()));         writer.print(',');
+                writer.print(csv(c.getFirstName()));     writer.print(',');
+                writer.print(csv(c.getLastName()));      writer.print(',');
+                writer.print(csv(c.getGender()));        writer.print(',');
+                writer.print(csv(c.getEmail()));         writer.print(',');
+                writer.print(csv(c.getPhone1()));        writer.print(',');
+                writer.print(csv(c.getPhone2()));        writer.print(',');
+                writer.print(csv(c.getInstitution()));   writer.print(',');
+                writer.print(csv(c.getFaculty()));       writer.print(',');
+                writer.print(csv(c.getStudyDomain()));   writer.print(',');
+                writer.print(csv(c.getPersGroup()));     writer.print(',');
+                writer.print(csv(c.getFunction()));      writer.print(',');
+                writer.print(csv(c.getCountry()));       writer.print(',');
+                writer.print(csv(Boolean.toString(c.isCoilExp())));     writer.print(',');
                 writer.print(csv(Boolean.toString(c.isMobilityFin()))); writer.print(',');
 
                 LocalDateTime createdAt = c.getCreatedAt();
@@ -175,12 +160,12 @@ public class ContactController  {
         }
     }
 
-    private String safe(Object value){
+    private String safe(Object value) {
         return value == null ? "" : value.toString();
     }
 
-    private String csv(String value){
-        if(value == null) return "\"\"";
+    private String csv(String value) {
+        if (value == null) return "\"\"";
         String escaped = value.replace("\"", "\"\"");
         return "\"" + escaped + "\"";
     }

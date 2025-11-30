@@ -233,23 +233,22 @@
                         </div>
                     </div>
 
-                    <div class="detail-item">
-                        <div class="detail-label">Created by</div>
-                        <div class="detail-value" th:text="${contact.createdBy}">user</div>
-                    </div>
-
-                    <div class="detail-item">
+                    <!-- Only show when there was a real update -->
+                    <div class="detail-item"
+                         th:if="${contact.updatedAt != null and contact.updatedAt != contact.createdAt}">
                         <div class="detail-label">Updated at</div>
                         <div class="detail-value"
-                             th:text="${contact.updatedAt != null ? #temporals.format(contact.updatedAt, 'yyyy-MM-dd HH:mm') : ''}">
+                             th:text="${#temporals.format(contact.updatedAt, 'yyyy-MM-dd HH:mm')}">
                             2025-01-02 11:00
                         </div>
                     </div>
 
-                    <div class="detail-item">
+                    <div class="detail-item"
+                         th:if="${contact.updatedAt != null and contact.updatedAt != contact.createdAt}">
                         <div class="detail-label">Updated by</div>
                         <div class="detail-value" th:text="${contact.updatedBy}">user</div>
                     </div>
+
 
                 </div>
             </section>

@@ -2,10 +2,7 @@ package com.marian_bt.contacts_app.service;
 
 import com.marian_bt.contacts_app.domain.Contact;
 import com.marian_bt.contacts_app.repository.ContactRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -38,25 +35,12 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public Contact createContact(Contact contact, String currentUsername) {
-        if (currentUsername == null || currentUsername.isBlank()) {
-            currentUsername = "system";
-        }
-
-        LocalDateTime now = LocalDateTime.now();
-        contact.setCreatedAt(now);
-        contact.setUpdatedAt(now);
-        contact.setCreatedBy(currentUsername);
-        contact.setUpdatedBy(currentUsername);
 
         return contactRepository.save(contact);
     }
 
     @Override
     public Contact updateContact(Long id, Contact updatedContact, String currentUsername) {
-        if (currentUsername == null || currentUsername.isBlank()) {
-            currentUsername = "system";
-        }
-
         Contact existing = contactRepository.findById(id)
                 .orElseThrow(() -> new ContactNotFoundException(id));
 
@@ -82,10 +66,7 @@ public class ContactServiceImpl implements ContactService {
         existing.setGender(updatedContact.getGender());
         existing.setComments(updatedContact.getComments());
 
-        // ✅ audit fields
-        existing.setUpdatedAt(LocalDateTime.now());
-        existing.setUpdatedBy(currentUsername);
-
+        // again: DO NOT set updatedAt/updatedBy, auditing will
         return contactRepository.save(existing);
     }
 
@@ -94,8 +75,6 @@ public class ContactServiceImpl implements ContactService {
         if (!contactRepository.existsById(id)) {
             throw new ContactNotFoundException(id);
         }
-
-
         contactRepository.deleteById(id);
     }
 
@@ -105,19 +84,19 @@ public class ContactServiceImpl implements ContactService {
             return getAllContacts();
         }
 
-        String firstName     = normalize(criteria.getFirstName());
-        String lastName      = normalize(criteria.getLastName());
-        String institution   = normalize(criteria.getInstitution());
-        String email         = normalize(criteria.getEmail());
-        String persGroup     = normalize(criteria.getPersGroup());
-        String country       = normalize(criteria.getCountry());
-        String fundUse       = normalize(criteria.getFundUse());
-        String postAddress   = normalize(criteria.getPostAddress());
-        String phone1        = normalize(criteria.getPhone1());
-        String phone2        = normalize(criteria.getPhone2());
-        String faculty       = normalize(criteria.getFaculty());
-        String studyDomain   = normalize(criteria.getStudyDomain());
-        String gender        = normalize(criteria.getGender());
+        String firstName   = normalize(criteria.getFirstName());
+        String lastName    = normalize(criteria.getLastName());
+        String institution = normalize(criteria.getInstitution());
+        String email       = normalize(criteria.getEmail());
+        String persGroup   = normalize(criteria.getPersGroup());
+        String country     = normalize(criteria.getCountry());
+        String fundUse     = normalize(criteria.getFundUse());
+        String postAddress = normalize(criteria.getPostAddress());
+        String phone1      = normalize(criteria.getPhone1());
+        String phone2      = normalize(criteria.getPhone2());
+        String faculty     = normalize(criteria.getFaculty());
+        String studyDomain = normalize(criteria.getStudyDomain());
+        String gender      = normalize(criteria.getGender());
 
         LocalDateTime createdAfter  = criteria.getCreatedAfter();
         LocalDateTime createdBefore = criteria.getCreatedBefore();
@@ -177,19 +156,19 @@ public class ContactServiceImpl implements ContactService {
             return getAllContacts(pageable);
         }
 
-        String firstName     = normalize(criteria.getFirstName());
-        String lastName      = normalize(criteria.getLastName());
-        String institution   = normalize(criteria.getInstitution());
-        String email         = normalize(criteria.getEmail());
-        String persGroup     = normalize(criteria.getPersGroup());
-        String country       = normalize(criteria.getCountry());
-        String fundUse       = normalize(criteria.getFundUse());
-        String postAddress   = normalize(criteria.getPostAddress());
-        String phone1        = normalize(criteria.getPhone1());
-        String phone2        = normalize(criteria.getPhone2());
-        String faculty       = normalize(criteria.getFaculty());
-        String studyDomain   = normalize(criteria.getStudyDomain());
-        String gender        = normalize(criteria.getGender());
+        String firstName   = normalize(criteria.getFirstName());
+        String lastName    = normalize(criteria.getLastName());
+        String institution = normalize(criteria.getInstitution());
+        String email       = normalize(criteria.getEmail());
+        String persGroup   = normalize(criteria.getPersGroup());
+        String country     = normalize(criteria.getCountry());
+        String fundUse     = normalize(criteria.getFundUse());
+        String postAddress = normalize(criteria.getPostAddress());
+        String phone1      = normalize(criteria.getPhone1());
+        String phone2      = normalize(criteria.getPhone2());
+        String faculty     = normalize(criteria.getFaculty());
+        String studyDomain = normalize(criteria.getStudyDomain());
+        String gender      = normalize(criteria.getGender());
 
         LocalDateTime createdAfter  = criteria.getCreatedAfter();
         LocalDateTime createdBefore = criteria.getCreatedBefore();
