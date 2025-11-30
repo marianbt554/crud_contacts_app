@@ -4,12 +4,18 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(
         name = "contacts",
         indexes = {
@@ -62,10 +68,22 @@ public class Contact  {
     )
     private String gender;
     private String           comments;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime    createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
     private LocalDateTime    updatedAt;
-    private String           createdBy; //reference to username later
-    private String           updatedBy; //reference to username later
+
+    @CreatedBy
+    @Column(name = "created_by", updatable = false)
+    private String           createdBy;
+
+    @LastModifiedBy
+    @Column(name = "updated_by")
+    private String           updatedBy;
 
 
     public Contact() {
