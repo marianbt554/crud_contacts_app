@@ -14,7 +14,7 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
 
         if (authentication == null ||
         !authentication.isAuthenticated() ||
-        !(authentication instanceof AnonymousAuthenticationToken)){
+        (authentication instanceof AnonymousAuthenticationToken)){
             return Optional.of("system");
         }
 
