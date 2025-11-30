@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -114,6 +115,41 @@ public class AppUserController {
         return "redirect:/users";
     }
 
+
+    @PostMapping("/{id}/delete")
+    public String deleteUser(@PathVariable Long id,
+                             Authentication authentication,
+                             RedirectAttributes redirectAttributes){
+        AppUser user =  userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User with id " + id + " does not exist"));
+
+        String currentUsername =  authentication.getName();
+
+        if (user.getUsername().equals(currentUsername)){
+            redirectAttributes.addFlashAttribute(
+                    "message",
+                    "You can not delete your own account."
+            );
+            return "redirect:/users";
+        }
+
+        if (user.getRole() == UserRole.ADMIN){
+            long adminCount = userRepository.countByRole(UserRole.ADMIN);
+            if (adminCount <= 1){
+                redirectAttributes.addFlashAttribute("message",
+                        "You can not delete the last administrator account."
+                );
+                return "redirect:/users";
+            }
+        }
+
+        userRepository.delete(user);
+
+        redirectAttributes.addFlashAttribute("message",
+                "User " + user.getUsername() + " has been deleted.");
+
+        return "redirect:/users";
+    }
 
 
     public static class CreateUserForm {
