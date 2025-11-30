@@ -17,9 +17,15 @@
         <div class="app-header-actions">
             <span>Contacts CRUD · Spring Boot</span>
 
+            <a th:href="@{/users}" class="btn btn-secondary"
+               sec:authorize="hasRole('ADMIN')"
+               style="margin-left: 0.75rem;">
+                Manage users
+            </a>
+
             <span sec:authorize="isAuthenticated()" style="margin-left: 0.5rem;">
-        · Logged in as <strong sec:authentication="name"></strong>
-    </span>
+                · Logged in as <strong sec:authentication="name"></strong>
+            </span>
 
             <form th:action="@{/logout}" method="post" style="display:inline;">
                 <input type="hidden"
@@ -48,7 +54,11 @@
             </div>
             <div class="btn-row">
                 <a th:href="@{/contacts}" class="btn btn-ghost">← Back to list</a>
-                <a th:href="@{/contacts/{id}/edit(id=${contact.id})}" class="btn btn-secondary">Edit</a>
+                <a th:href="@{/contacts/{id}/edit(id=${contact.id})}"
+                   class="btn btn-secondary"
+                   sec:authorize="hasRole('ADMIN')">
+                    Edit
+                </a>
             </div>
         </div>
 

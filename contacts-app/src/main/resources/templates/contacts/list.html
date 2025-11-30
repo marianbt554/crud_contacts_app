@@ -21,8 +21,8 @@
             </a>
 
             <span sec:authorize="isAuthenticated()" style="margin-left: 0.5rem;">
-        · Logged in as <strong sec:authentication="name"></strong>
-    </span>
+                · Logged in as <strong sec:authentication="name"></strong>
+            </span>
 
             <form th:action="@{/logout}" method="post" style="display:inline;">
                 <input type="hidden"
@@ -162,7 +162,9 @@
                     <th>COIL exp</th>
                     <th>Mobility fin</th>
                     <th>Created at</th>
+                    <th>Created by</th>
                     <th>Updated at</th>
+                    <th>Updated by</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -198,35 +200,35 @@
                         <span th:if="${!contact.mobilityFin}" class="badge badge-no">No</span>
                     </td>
 
-                    <!-- Formatted timestamps -->
+                    <!-- Formatted timestamps + audit users -->
                     <td th:text="${contact.createdAt != null ? #temporals.format(contact.createdAt, 'yyyy-MM-dd HH:mm') : ''}">
                         2025-01-01 10:00
                     </td>
+                    <td th:text="${contact.createdBy}"> </td>
                     <td th:text="${contact.updatedAt != null ? #temporals.format(contact.updatedAt, 'yyyy-MM-dd HH:mm') : ''}">
                         2025-01-02 11:00
                     </td>
+                    <td th:text="${contact.updatedBy}"> </td>
 
                     <td class="actions-cell">
                         <a th:href="@{/contacts/{id}(id=${contact.id})}" class="btn btn-ghost">View</a>
 
                         <span sec:authorize="hasRole('ADMIN')">
-        <a th:href="@{/contacts/{id}/edit(id=${contact.id})}" class="btn btn-secondary">Edit</a>
-        <form th:action="@{/contacts/{id}/delete(id=${contact.id})}"
-              method="post" style="display:inline">
-            <button type="submit"
-                    class="btn btn-danger"
-                    onclick="return confirm('Delete this contact?');">
-                Delete
-            </button>
-        </form>
-    </span>
+                            <a th:href="@{/contacts/{id}/edit(id=${contact.id})}" class="btn btn-secondary">Edit</a>
+                            <form th:action="@{/contacts/{id}/delete(id=${contact.id})}"
+                                  method="post" style="display:inline">
+                                <button type="submit"
+                                        class="btn btn-danger"
+                                        onclick="return confirm('Delete this contact?');">
+                                    Delete
+                                </button>
+                            </form>
+                        </span>
                     </td>
-
-
                 </tr>
 
                 <tr th:if="${#lists.isEmpty(contacts)}">
-                    <td colspan="20" class="text-muted">
+                    <td colspan="22" class="text-muted">
                         No contacts found.
                     </td>
                 </tr>
