@@ -1,6 +1,5 @@
 package com.marian_bt.contacts_app.service;
 
-
 import com.marian_bt.contacts_app.domain.Contact;
 import com.marian_bt.contacts_app.repository.ContactRepository;
 import org.springframework.data.domain.Page;
@@ -14,7 +13,8 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
-public class ContactServiceImpl implements ContactService{
+public class ContactServiceImpl implements ContactService {
+
     private final ContactRepository contactRepository;
 
     public ContactServiceImpl(ContactRepository contactRepository) {
@@ -33,17 +33,30 @@ public class ContactServiceImpl implements ContactService{
     @Override
     public Contact getContactById(Long id) {
         return contactRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Contact not found with Id" + id));
+                .orElseThrow(() -> new RuntimeException("Contact not found with Id " + id));
     }
 
     @Override
-    public Contact createContact(Contact contact) {
+    public Contact createContact(Contact contact, String currentUsername) {
+        if (currentUsername == null || currentUsername.isBlank()) {
+            currentUsername = "system";
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        contact.setCreatedAt(now);
+        contact.setUpdatedAt(now);
+        contact.setCreatedBy(currentUsername);
+        contact.setUpdatedBy(currentUsername);
 
         return contactRepository.save(contact);
     }
 
     @Override
-    public Contact updateContact(Long id, Contact updatedContact) {
+    public Contact updateContact(Long id, Contact updatedContact, String currentUsername) {
+        if (currentUsername == null || currentUsername.isBlank()) {
+            currentUsername = "system";
+        }
+
         Contact existing = contactRepository.findById(id)
                 .orElseThrow(() -> new ContactNotFoundException(id));
 
@@ -69,17 +82,21 @@ public class ContactServiceImpl implements ContactService{
         existing.setGender(updatedContact.getGender());
         existing.setComments(updatedContact.getComments());
 
-
+        // ✅ audit fields
+        existing.setUpdatedAt(LocalDateTime.now());
+        existing.setUpdatedBy(currentUsername);
 
         return contactRepository.save(existing);
-
     }
 
     @Override
-    public void deleteContact(Long id) {
+    public void deleteContact(Long id, String currentUsername) {
         if (!contactRepository.existsById(id)) {
             throw new ContactNotFoundException(id);
         }
+
+        // You could later log something like:
+        // "User X deleted contact Y" using currentUsername
 
         contactRepository.deleteById(id);
     }
@@ -89,6 +106,7 @@ public class ContactServiceImpl implements ContactService{
         if (criteria == null || criteria.isEmpty()) {
             return getAllContacts();
         }
+
         String firstName     = normalize(criteria.getFirstName());
         String lastName      = normalize(criteria.getLastName());
         String institution   = normalize(criteria.getInstitution());
@@ -103,13 +121,11 @@ public class ContactServiceImpl implements ContactService{
         String studyDomain   = normalize(criteria.getStudyDomain());
         String gender        = normalize(criteria.getGender());
 
-        // Date/time fields can be passed as-is (null = no filter)
         LocalDateTime createdAfter  = criteria.getCreatedAfter();
         LocalDateTime createdBefore = criteria.getCreatedBefore();
         LocalDateTime updatedAfter  = criteria.getUpdatedAfter();
         LocalDateTime updatedBefore = criteria.getUpdatedBefore();
 
-        // Booleans already use null to mean "no filter"
         Boolean coilExp     = criteria.getCoilExp();
         Boolean mobilityFin = criteria.getMobilityFin();
 
@@ -137,7 +153,7 @@ public class ContactServiceImpl implements ContactService{
     }
 
     private Pageable withDefaultSort(Pageable pageable) {
-        if (pageable.getSort().isUnsorted()){
+        if (pageable.getSort().isUnsorted()) {
             Sort defaultSort = Sort.by(
                     Sort.Order.asc("lastName").ignoreCase(),
                     Sort.Order.asc("firstName").ignoreCase()

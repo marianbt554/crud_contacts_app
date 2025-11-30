@@ -9,6 +9,9 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,6 +33,18 @@ public class ContactController  {
 
     public ContactController(ContactService contactService) {
         this.contactService = contactService;
+    }
+
+    public String getCurrentUsername(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+
+            return "system";
+
+        }
+
+        return auth.getName();
     }
 
     @GetMapping
@@ -83,12 +98,15 @@ public class ContactController  {
             model.addAttribute("hasErrors", true);
             return "contacts/form";
         }
+
+        String currentUsername = getCurrentUsername();
+
         if (contact.getId() == null) {
 
-            contactService.createContact(contact);
+            contactService.createContact(contact, currentUsername);
         } else {
 
-            contactService.updateContact(contact.getId(), contact);
+            contactService.updateContact(contact.getId(), contact, currentUsername);
         }
 
         return "redirect:/contacts";
@@ -97,7 +115,9 @@ public class ContactController  {
     @PostMapping("/{id}/delete")
     public String deleteContact (@PathVariable("id") Long id){
 
-        contactService.deleteContact(id);
+        String currentUsername = getCurrentUsername();
+
+        contactService.deleteContact(id, currentUsername);
         return "redirect:/contacts";
     }
 
