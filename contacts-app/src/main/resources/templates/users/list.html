@@ -40,15 +40,17 @@
         <!-- Header row -->
         <div class="card-header">
             <div>
-                <h1 class="card-title">Application users</h1>
+                <h1 class="card-title">Users</h1>
                 <div class="card-subtitle">
-                    Manage who can access the Contacts Manager and what they are allowed to do.
+                    Manage application users and their roles.
                 </div>
             </div>
+
             <div class="btn-row">
-                <a th:href="@{/contacts}" class="btn btn-ghost">← Back to contacts</a>
+                <a th:href="@{/users/new}" class="btn btn-primary">+ New user</a>
             </div>
         </div>
+
 
         <!-- Users table -->
         <div class="table-wrapper mt-3">
