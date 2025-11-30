@@ -14,15 +14,15 @@ public interface ContactService {
     Contact getContactById (Long id);
 
     /*Create a new contact method*/
-    Contact createContact(Contact contact, String currentUsername);
+    Contact createContact(Contact contact);
 
     /*Update an existing contact method*/
-    Contact updateContact(Long id, Contact updatedContact, String currentUsername);
+    Contact updateContact(Long id, Contact updatedContact);
 
-    /*Delete an existing contact method. currentUsername is kept for future auditing, even if not used yet.*/
-    void deleteContact(Long id, String currentUsername);
 
-    /*Search contacts using multiple search criteria*/
+    void deleteContact(Long id);
+
+
     List<Contact> searchContacts(ContactSearchCriteria criteria);
 
     Page<Contact> getAllContacts(Pageable pageable);

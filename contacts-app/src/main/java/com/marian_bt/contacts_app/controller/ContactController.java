@@ -77,18 +77,18 @@ public class ContactController  {
     public String saveContact(@Valid @ModelAttribute("contact") Contact contact,
                               BindingResult bindingResult,
                               Model model) {
-        String currentUsername = "system"; // later from Spring Security
+
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("hasErrors", true);
             return "contacts/form";
         }
         if (contact.getId() == null) {
-            // no id -> create
-            contactService.createContact(contact, currentUsername);
+
+            contactService.createContact(contact);
         } else {
-            // id present -> update
-            contactService.updateContact(contact.getId(), contact, currentUsername);
+
+            contactService.updateContact(contact.getId(), contact);
         }
 
         return "redirect:/contacts";
@@ -96,8 +96,8 @@ public class ContactController  {
 
     @PostMapping("/{id}/delete")
     public String deleteContact (@PathVariable("id") Long id){
-        String currentUsername = "system";
-        contactService.deleteContact(id, currentUsername);
+
+        contactService.deleteContact(id);
         return "redirect:/contacts";
     }
 

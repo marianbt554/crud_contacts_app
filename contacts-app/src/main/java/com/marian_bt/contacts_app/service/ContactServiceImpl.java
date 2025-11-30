@@ -37,18 +37,13 @@ public class ContactServiceImpl implements ContactService{
     }
 
     @Override
-    public Contact createContact(Contact contact, String currentUsername) {
-        LocalDateTime now = LocalDateTime.now();
+    public Contact createContact(Contact contact) {
 
-        contact.setCreatedAt(now);
-        contact.setUpdatedAt(now);
-        contact.setCreatedBy(currentUsername);
-        contact.setUpdatedBy(currentUsername);
         return contactRepository.save(contact);
     }
 
     @Override
-    public Contact updateContact(Long id, Contact updatedContact, String currentUsername) {
+    public Contact updateContact(Long id, Contact updatedContact) {
         Contact existing = contactRepository.findById(id)
                 .orElseThrow(() -> new ContactNotFoundException(id));
 
@@ -74,20 +69,18 @@ public class ContactServiceImpl implements ContactService{
         existing.setGender(updatedContact.getGender());
         existing.setComments(updatedContact.getComments());
 
-        // Audit fields
-        existing.setUpdatedAt(LocalDateTime.now());
-        existing.setUpdatedBy(currentUsername);
+
 
         return contactRepository.save(existing);
 
     }
 
     @Override
-    public void deleteContact(Long id, String currentUsername) {
+    public void deleteContact(Long id) {
         if (!contactRepository.existsById(id)) {
             throw new ContactNotFoundException(id);
         }
-        //change later to something that would return: "User X deleted contact Y"
+
         contactRepository.deleteById(id);
     }
 
