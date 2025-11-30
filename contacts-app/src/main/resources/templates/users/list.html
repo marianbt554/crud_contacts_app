@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Management</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="page-root">
+
+<div class="app-header">
+    <div class="app-header-inner">
+        <div class="app-title">
+            Contacts <span>Manager</span>
+        </div>
+        <div class="app-header-actions">
+            <span>User Management · Spring Boot</span>
+
+            <span sec:authorize="isAuthenticated()" style="margin-left: 0.5rem;">
+                · Logged in as <strong sec:authentication="name"></strong>
+            </span>
+
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}"/>
+
+                <button type="submit" class="btn btn-ghost">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<main class="app-main">
+    <div class="card">
+
+        <!-- Header row -->
+        <div class="card-header">
+            <div>
+                <h1 class="card-title">Application users</h1>
+                <div class="card-subtitle">
+                    Manage who can access the Contacts Manager and what they are allowed to do.
+                </div>
+            </div>
+            <div class="btn-row">
+                <a th:href="@{/contacts}" class="btn btn-ghost">← Back to contacts</a>
+            </div>
+        </div>
+
+        <!-- Users table -->
+        <div class="table-wrapper mt-3">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Enabled</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="user, iter : ${users}">
+                    <td th:text="${iter.index + 1}">1</td>
+                    <td th:text="${user.username}">admin</td>
+                    <td th:text="${user.role}">ADMIN</td>
+
+                    <td>
+                        <span th:if="${user.enabled}" class="badge badge-yes">Enabled</span>
+                        <span th:if="${!user.enabled}" class="badge badge-no">Disabled</span>
+                    </td>
+
+                    <td class="actions-cell">
+
+                        <!-- Enable / Disable button -->
+                        <form th:action="@{/users/{id}/toggle-enabled(id=${user.id})}"
+                              method="post"
+                              style="display:inline;">
+                            <input type="hidden"
+                                   th:name="${_csrf.parameterName}"
+                                   th:value="${_csrf.token}"/>
+                            <button type="submit" class="btn btn-secondary">
+                                <span th:text="${user.enabled} ? 'Disable' : 'Enable'">Disable</span>
+                            </button>
+                        </form>
+
+                        <!-- Change role -->
+                        <form th:action="@{/users/{id}/role(id=${user.id})}"
+                              method="post"
+                              style="display:inline; margin-left: 0.5rem;">
+                            <input type="hidden"
+                                   th:name="${_csrf.parameterName}"
+                                   th:value="${_csrf.token}"/>
+
+                            <select name="role" class="form-select form-select-inline">
+                                <option th:each="r : ${roles}"
+                                        th:value="${r}"
+                                        th:text="${r}"
+                                        th:selected="${r == user.role}">
+                                </option>
+                            </select>
+
+                            <button type="submit" class="btn btn-ghost">
+                                Change role
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(users)}">
+                    <td colspan="5" class="text-muted">
+                        No users found.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</main>
+
+</body>
+</html>

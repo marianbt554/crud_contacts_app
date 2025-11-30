@@ -16,6 +16,9 @@
         </div>
         <div class="app-header-actions">
             <span>Contacts CRUD · Spring Boot</span>
+            <a th:href="@{/users}" class="btn btn-secondary" sec:authorize="hasRole('ADMIN')" style="margin-left: 0.75rem;">
+                Manage users
+            </a>
 
             <span sec:authorize="isAuthenticated()" style="margin-left: 0.5rem;">
         · Logged in as <strong sec:authentication="name"></strong>

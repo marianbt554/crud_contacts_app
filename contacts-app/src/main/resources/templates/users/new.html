@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create user</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="page-root">
+
+<div class="app-header">
+    <div class="app-header-inner">
+        <div class="app-title">
+            Contacts <span>Manager</span>
+        </div>
+        <div class="app-header-actions">
+            <span>Admin · New User</span>
+
+            <span sec:authorize="isAuthenticated()" style="margin-left: 0.5rem;">
+                · Logged in as <strong sec:authentication="name"></strong>
+            </span>
+
+            <a th:href="@{/users}" class="btn btn-secondary" style="margin-left: 0.75rem;">
+                Back to user list
+            </a>
+
+            <form th:action="@{/logout}" method="post" style="display:inline; margin-left: 0.5rem;">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}"/>
+                <button type="submit" class="btn btn-ghost">Logout</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<main class="app-main">
+    <div class="card">
+
+        <div class="card-header">
+            <div>
+                <h1 class="card-title">Create user</h1>
+                <div class="card-subtitle">
+                    Create a new account with a role.
+                </div>
+            </div>
+        </div>
+
+        <form th:action="@{/users/new}" th:object="${userForm}" method="post">
+            <div class="form-grid">
+
+                <div class="form-field">
+                    <label class="form-label">Username<span class="required">*</span></label>
+                    <input type="text" th:field="*{username}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Password<span class="required">*</span></label>
+                    <input type="password" th:field="*{password}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Role<span class="required">*</span></label>
+                    <select th:field="*{role}" class="form-select">
+                        <option th:each="r : ${roles}"
+                                th:value="${r}"
+                                th:text="${r}">
+                        </option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="form-footer">
+                <a th:href="@{/users}" class="btn btn-ghost">Cancel</a>
+                <div class="form-footer-right">
+                    <button type="submit" class="btn btn-primary">Create user</button>
+                </div>
+            </div>
+
+            <input type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}"/>
+
+        </form>
+
+    </div>
+</main>
+
+</body>
+</html>
