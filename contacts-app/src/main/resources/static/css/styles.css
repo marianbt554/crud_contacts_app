@@ -513,3 +513,27 @@ textarea.form-control {
     color: #bbf7d0;
     border: 1px solid var(--success);
 }
+
+
+
+.auth-main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 4rem;
+}
+
+.auth-card {
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.auth-form .single-column {
+    grid-template-columns: 1fr;
+}
+
+
+.auth-card .card-header {
+    margin-bottom: 1rem;
+}
