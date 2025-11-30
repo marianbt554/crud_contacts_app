@@ -59,11 +59,7 @@
             </div>
         </div>
 
-        <!-- Global errors -->
-        <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
-            Please correct the errors below.
-        </div>
-
+        <!-- The actual form -->
         <form th:action="@{/contacts/save}" th:object="${contact}" method="post">
 
             <!-- CSRF -->
@@ -73,6 +69,11 @@
 
             <!-- ID (for edit) -->
             <input type="hidden" th:if="*{id != null}" th:field="*{id}"/>
+
+            <!-- Global errors (MUST be inside the form so #fields has context) -->
+            <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                Please correct the errors below.
+            </div>
 
             <!-- Basic info -->
             <section class="form-section">
@@ -242,35 +243,35 @@
                 </div>
             </section>
 
-            <!-- Audit (read-only, only for existing contacts) -->
-            <section class="form-section" th:if="*{id} != null">
+            <!-- Audit (read-only) -->
+            <section class="form-section" th:if="*{id != null}">
                 <h2 class="form-section-title">Audit</h2>
                 <div class="detail-grid">
 
                     <div class="detail-item">
                         <div class="detail-label">Created at</div>
                         <div class="detail-value"
-                             th:text="*{createdAt != null} ? ${#temporals.format(createdAt, 'yyyy-MM-dd HH:mm')} : ''">
+                             th:text="${contact.createdAt != null ? #temporals.format(contact.createdAt, 'yyyy-MM-dd HH:mm') : ''}">
                             2025-01-01 10:00
                         </div>
                     </div>
 
                     <div class="detail-item">
                         <div class="detail-label">Created by</div>
-                        <div class="detail-value" th:text="*{createdBy}">user</div>
+                        <div class="detail-value" th:text="${contact.createdBy}">user</div>
                     </div>
 
                     <div class="detail-item">
                         <div class="detail-label">Updated at</div>
                         <div class="detail-value"
-                             th:text="*{updatedAt != null} ? ${#temporals.format(updatedAt, 'yyyy-MM-dd HH:mm')} : ''">
+                             th:text="${contact.updatedAt != null ? #temporals.format(contact.updatedAt, 'yyyy-MM-dd HH:mm') : ''}">
                             2025-01-02 11:00
                         </div>
                     </div>
 
                     <div class="detail-item">
                         <div class="detail-label">Updated by</div>
-                        <div class="detail-value" th:text="*{updatedBy}">user</div>
+                        <div class="detail-value" th:text="${contact.updatedBy}">user</div>
                     </div>
 
                 </div>
