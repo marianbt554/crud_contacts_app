@@ -95,8 +95,6 @@ public class ContactServiceImpl implements ContactService {
             throw new ContactNotFoundException(id);
         }
 
-        // You could later log something like:
-        // "User X deleted contact Y" using currentUsername
 
         contactRepository.deleteById(id);
     }
