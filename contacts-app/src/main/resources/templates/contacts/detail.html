@@ -233,6 +233,11 @@
                         </div>
                     </div>
 
+                    <div class="detail-item">
+                        <div class="detail-label">Created by</div>
+                        <div class="detail-value" th:text="${contact.createdBy}">user</div>
+                    </div>
+
                     <!-- Only show when there was a real update -->
                     <div class="detail-item"
                          th:if="${contact.updatedAt != null and contact.updatedAt != contact.createdAt}">
@@ -248,7 +253,6 @@
                         <div class="detail-label">Updated by</div>
                         <div class="detail-value" th:text="${contact.updatedBy}">user</div>
                     </div>
-
 
                 </div>
             </section>
