@@ -15,10 +15,10 @@
             Contacts <span>Manager</span>
         </div>
         <div class="app-header-actions">
-            <span>User management · Admin</span>
+            <span>Contacts CRUD · Spring Boot</span>
 
-            <!-- Back to contacts -->
-            <a th:href="@{/contacts}" class="btn btn-ghost" style="margin-left: 0.75rem;">
+            <a th:href="@{/contacts}" class="btn btn-ghost"
+               style="margin-left: 0.75rem;">
                 ← Back to contacts
             </a>
 
@@ -30,7 +30,6 @@
                 <input type="hidden"
                        th:name="${_csrf.parameterName}"
                        th:value="${_csrf.token}"/>
-
                 <button type="submit" class="btn btn-ghost">
                     Logout
                 </button>
@@ -44,9 +43,9 @@
 
         <div class="card-header">
             <div>
-                <h1 class="card-title">Users</h1>
+                <h1 class="card-title">User management</h1>
                 <div class="card-subtitle">
-                    Manage application users, roles and access.
+                    Manage application users and their roles.
                 </div>
             </div>
             <div class="btn-row">
@@ -56,89 +55,50 @@
             </div>
         </div>
 
-        <!-- Flash message -->
+        <!-- Flash messages -->
         <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-        <!-- Users table -->
-        <div class="table-wrapper mt-3">
+        <div class="table-wrapper">
             <table class="table">
                 <thead>
                 <tr>
-                    <th>#</th>
+                    <th style="width: 5%;">ID</th>
                     <th>Username</th>
-                    <th>Role</th>
-                    <th>Enabled</th>
-                    <th>Created at</th>
-                    <th>Updated at</th>
-                    <th>Actions</th>
+                    <th style="width: 15%;">Role</th>
+                    <th style="width: 10%;">Enabled</th>
+                    <th style="width: 20%;">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user, iter : ${users}">
-                    <td th:text="${iter.index + 1}">1</td>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}">1</td>
                     <td th:text="${user.username}">admin</td>
 
-                    <!-- Role select -->
                     <td>
-                        <form th:action="@{/users/{id}/role(id=${user.id})}"
-                              method="post"
-                              style="display:inline;">
-                            <input type="hidden"
-                                   th:name="${_csrf.parameterName}"
-                                   th:value="${_csrf.token}"/>
-
-                            <select name="role" class="form-select form-select-sm">
-                                <option th:each="r : ${roles}"
-                                        th:value="${r}"
-                                        th:selected="${r == user.role}"
-                                        th:text="${r}">
-                                    ROLE
-                                </option>
-                            </select>
-                            <button type="submit" class="btn btn-secondary btn-sm" style="margin-left: 0.25rem;">
-                                Change
-                            </button>
-                        </form>
+                        <span class="badge badge-soft" th:text="${user.role}">ADMIN</span>
                     </td>
 
-                    <!-- Enabled toggle -->
                     <td>
-                        <form th:action="@{/users/{id}/toggle-enabled(id=${user.id})}"
-                              method="post"
-                              style="display:inline;">
-                            <input type="hidden"
-                                   th:name="${_csrf.parameterName}"
-                                   th:value="${_csrf.token}"/>
-
-                            <button type="submit"
-                                    th:text="${user.enabled} ? 'Enabled' : 'Disabled'"
-                                    th:classappend="${user.enabled} ? ' badge-yes' : ' badge-no'"
-                                    class="btn btn-ghost">
-                                Enabled
-                            </button>
-                        </form>
+                        <span th:if="${user.enabled}" class="badge badge-yes">Yes</span>
+                        <span th:if="${!user.enabled}" class="badge badge-no">No</span>
                     </td>
 
-                    <!-- Audit columns (optional: if you added createdAt/updatedAt to AppUser) -->
-                    <td th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm') : ''}">
-                        2025-01-01 10:00
-                    </td>
-                    <td th:text="${user.updatedAt != null ? #temporals.format(user.updatedAt, 'yyyy-MM-dd HH:mm') : ''}">
-                        2025-01-02 11:00
-                    </td>
+                    <td class="table-actions">
+                        <a th:href="@{/users/{id}/edit(id=${user.id})}"
+                           class="btn btn-secondary btn-sm">
+                            Edit
+                        </a>
 
-                    <!-- Delete -->
-                    <td class="actions-cell">
                         <form th:action="@{/users/{id}/delete(id=${user.id})}"
                               method="post"
                               style="display:inline;">
                             <input type="hidden"
                                    th:name="${_csrf.parameterName}"
                                    th:value="${_csrf.token}"/>
-
                             <button type="submit"
                                     class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Delete user ' + '[[${user.username}]]' + '?');">
+                                    onclick="return confirm('Delete this user?');">
                                 Delete
                             </button>
                         </form>
@@ -146,7 +106,7 @@
                 </tr>
 
                 <tr th:if="${#lists.isEmpty(users)}">
-                    <td colspan="7" class="text-muted">
+                    <td colspan="5" class="text-muted" style="text-align: center;">
                         No users found.
                     </td>
                 </tr>

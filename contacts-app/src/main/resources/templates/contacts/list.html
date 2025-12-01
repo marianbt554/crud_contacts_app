@@ -55,7 +55,14 @@
                    sec:authorize="hasRole('ADMIN')">
                     + New contact
                 </a>
+
+                <a th:href="@{/contacts/import}" class="btn btn-secondary"
+                   sec:authorize="hasRole('ADMIN')"
+                   style="margin-left: 0.5rem;">
+                    Import CSV
+                </a>
             </div>
+
 
         </div>
 
