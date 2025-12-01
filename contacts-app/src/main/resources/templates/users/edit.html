@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>New User · Contacts Manager</title>
+    <title>Edit User · Contacts Manager</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body class="page-root">
@@ -30,7 +30,6 @@
                 <input type="hidden"
                        th:name="${_csrf.parameterName}"
                        th:value="${_csrf.token}"/>
-
                 <button type="submit" class="btn btn-ghost">
                     Logout
                 </button>
@@ -44,9 +43,9 @@
 
         <div class="card-header">
             <div>
-                <h1 class="card-title">New user</h1>
+                <h1 class="card-title">Edit user</h1>
                 <div class="card-subtitle">
-                    Create a new application user and assign a role.
+                    Update the role and (optionally) reset the password.
                 </div>
             </div>
             <div class="btn-row">
@@ -57,9 +56,11 @@
             </div>
         </div>
 
-        <form th:action="@{/users/new}" th:object="${userForm}" method="post">
+        <form th:action="@{/users/{id}/edit(id=${userId})}"
+              th:object="${userForm}"
+              method="post">
 
-            <!-- Global validation summary (must be inside form with th:object) -->
+            <!-- Global validation summary -->
             <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
                 Please fix the errors below and try again.
             </div>
@@ -70,14 +71,14 @@
 
             <div class="form-grid">
 
-                <!-- Username -->
+                <!-- Username (read-only) -->
                 <div class="form-field">
                     <label class="form-label" for="username">Username</label>
                     <input type="text"
                            id="username"
                            th:field="*{username}"
                            class="form-control"
-                           autofocus>
+                           readonly>
                     <div class="field-error"
                          th:if="${#fields.hasErrors('username')}"
                          th:errors="*{username}">
@@ -85,9 +86,9 @@
                     </div>
                 </div>
 
-                <!-- Password -->
+                <!-- Password (optional) -->
                 <div class="form-field">
-                    <label class="form-label" for="password">Password</label>
+                    <label class="form-label" for="password">New password (leave blank to keep current)</label>
                     <input type="password"
                            id="password"
                            th:field="*{password}"
@@ -125,7 +126,7 @@
 
                 <div class="form-footer-right">
                     <button type="submit" class="btn btn-primary">
-                        Create user
+                        Save changes
                     </button>
                 </div>
             </div>
