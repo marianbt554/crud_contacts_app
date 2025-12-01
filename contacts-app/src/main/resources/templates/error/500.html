@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Server error · Contacts Manager</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="page-root">
+
+<div class="app-header">
+    <div class="app-header-inner">
+        <div class="app-title">
+            Contacts <span>Manager</span>
+        </div>
+        <div class="app-header-actions">
+            <span>Contacts CRUD · Spring Boot</span>
+
+            <a th:href="@{/users}" class="btn btn-secondary"
+               sec:authorize="hasRole('ADMIN')"
+               style="margin-left: 0.75rem;">
+                Manage users
+            </a>
+
+            <span sec:authorize="isAuthenticated()" style="margin-left: 0.5rem;">
+                · Logged in as <strong sec:authentication="name"></strong>
+            </span>
+
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}"/>
+
+                <button type="submit" class="btn btn-ghost">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<main class="app-main">
+    <div class="card">
+
+        <div class="card-header">
+            <div>
+                <h1 class="card-title">Something went wrong</h1>
+                <div class="card-subtitle">
+                    An unexpected error occurred while processing your request.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <p class="text-muted">
+                Error code: <strong>500</strong>
+            </p>
+
+            <p class="text-muted">
+                Please try again later. If the problem persists, contact the administrator.
+            </p>
+
+            <div class="btn-row">
+                <a th:href="@{/contacts}" class="btn btn-primary">← Back to contacts</a>
+                <a th:href="@{/}" class="btn btn-ghost">Go to home</a>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+</body>
+</html>
