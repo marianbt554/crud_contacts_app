@@ -4,6 +4,7 @@ import com.marian_bt.contacts_app.domain.Contact;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.InputStream;
 import java.util.List;
 
 public interface ContactService {
@@ -23,4 +24,6 @@ public interface ContactService {
     List<Contact> searchContacts(ContactSearchCriteria criteria);
 
     Page<Contact> searchContacts(ContactSearchCriteria criteria, Pageable pageable);
+
+    int importContacts (InputStream inputStream);
 }

@@ -1,6 +1,7 @@
 package com.marian_bt.contacts_app.controller;
 
 import com.marian_bt.contacts_app.domain.Contact;
+import com.marian_bt.contacts_app.service.ContactImportException;
 import com.marian_bt.contacts_app.service.ContactSearchCriteria;
 import com.marian_bt.contacts_app.service.ContactService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -8,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
@@ -168,5 +173,41 @@ public class ContactController {
         if (value == null) return "\"\"";
         String escaped = value.replace("\"", "\"\"");
         return "\"" + escaped + "\"";
+    }
+
+    @GetMapping("/import")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String showImportForm() {
+        return "contacts/import";
+    }
+
+    @PostMapping("/import")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String handleImport(@RequestParam("file") MultipartFile file,
+                               RedirectAttributes redirectAttributes) {
+
+        if (file.isEmpty()) {
+
+            redirectAttributes.addFlashAttribute("message", "Please select a CSV file to upload!");
+            return "redirect:/contacts/import";
+        }
+
+        try {
+            int imported = contactService.importContacts(file.getInputStream());
+            redirectAttributes.addFlashAttribute("message",
+                    imported + " contacts imported successfully!"
+            );
+            return  "redirect:/contacts";
+        } catch (ContactImportException e){
+            redirectAttributes.addFlashAttribute("error message",
+                    "Import failed " + e.getMessage()
+            );
+            return "redirect:/contacts/import";
+        }catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error message",
+                    "Unexpected error during import: " + e.getMessage()
+            );
+            return "redirect:/contacts/import";
+        }
     }
 }

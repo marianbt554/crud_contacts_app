@@ -5,7 +5,13 @@ import com.marian_bt.contacts_app.repository.ContactRepository;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -211,4 +217,114 @@ public class ContactServiceImpl implements ContactService {
         String trimmed = value.trim();
         return trimmed.isEmpty() ? null : trimmed;
     }
+
+    @Override
+    public int importContacts (InputStream inputStream) {
+        try (BufferedReader reader =
+                     new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+
+            String header = reader.readLine(); // first line with column names
+            if (header == null) {
+                return 0;
+            }
+
+            int count = 0;
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.isBlank()) {
+                    continue;
+                }
+
+                var cols = parseCsvLine(line);
+
+                // Expect at least the columns you export:
+                // id, title, firstName, lastName, gender, email, phone1, phone2,
+                // institution, faculty, studyDomain, persGroup, function,
+                // country, coilExp, mobilityFin, createdAt, updatedAt
+                if (cols.size() < 17) {
+                    throw new ContactImportException("Invalid column count in line: " + line);
+                }
+
+                String email = unquote(cols.get(5));
+                if (email == null || email.isBlank()) {
+                    // no email → skip (or you could throw)
+                    continue;
+                }
+
+                Contact contact = contactRepository
+                        .findByEmailIgnoreCase(email)
+                        .orElseGet(Contact::new);
+
+                // Fill / update fields
+                contact.setTitle(unquote(cols.get(1)));
+                contact.setFirstName(unquote(cols.get(2)));
+                contact.setLastName(unquote(cols.get(3)));
+                contact.setGender(unquote(cols.get(4)));
+                contact.setEmail(email);
+                contact.setPhone1(unquote(cols.get(6)));
+                contact.setPhone2(unquote(cols.get(7)));
+                contact.setInstitution(unquote(cols.get(8)));
+                contact.setFaculty(unquote(cols.get(9)));
+                contact.setStudyDomain(unquote(cols.get(10)));
+                contact.setPersGroup(unquote(cols.get(11)));
+                contact.setFunction(unquote(cols.get(12)));
+                contact.setCountry(unquote(cols.get(13)));
+
+                String coilExpStr = unquote(cols.get(14));
+                String mobilityFinStr = unquote(cols.get(15));
+                contact.setCoilExp("true".equalsIgnoreCase(coilExpStr));
+                contact.setMobilityFin("true".equalsIgnoreCase(mobilityFinStr));
+
+                // We ignore createdAt / updatedAt from CSV.
+                // Auditing will set them automatically on save.
+
+                contactRepository.save(contact);
+                count++;
+            }
+
+            return count;
+
+        } catch (IOException e) {
+            throw new ContactImportException("Failed to read CSV file", e);
+        }
+    }
+
+    private java.util.List<String> parseCsvLine(String line) {
+        java.util.List<String> result = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        boolean inQuotes = false;
+
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+
+            if (c == '"') {
+                if (inQuotes && i + 1 < line.length() && line.charAt(i + 1) == '"') {
+                    // escaped "
+                    sb.append('"');
+                    i++;
+                } else {
+                    inQuotes = !inQuotes;
+                }
+            } else if (c == ',' && !inQuotes) {
+                result.add(sb.toString());
+                sb.setLength(0);
+            } else {
+                sb.append(c);
+            }
+        }
+        result.add(sb.toString());
+        return result;
+    }
+
+    private String unquote(String value) {
+        if (value == null) return null;
+        String trimmed = value.trim();
+        if (trimmed.length() >= 2 && trimmed.startsWith("\"") && trimmed.endsWith("\"")) {
+            trimmed = trimmed.substring(1, trimmed.length() - 1);
+        }
+        // unescape ""
+        return trimmed.replace("\"\"", "\"");
+    }
 }
+
