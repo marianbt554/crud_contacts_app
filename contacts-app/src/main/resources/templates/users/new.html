@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>New user · Contacts Manager</title>
+    <title>New User · Contacts Manager</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body class="page-root">
@@ -15,11 +15,26 @@
             Contacts <span>Manager</span>
         </div>
         <div class="app-header-actions">
-            <span>User administration</span>
+            <span>User management · Admin</span>
 
-            <span sec:authorize="isAuthenticated()" style="margin-left: .5rem;">
+            <!-- Back to contacts -->
+            <a th:href="@{/contacts}" class="btn btn-ghost" style="margin-left: 0.75rem;">
+                ← Back to contacts
+            </a>
+
+            <span sec:authorize="isAuthenticated()" style="margin-left: 0.5rem;">
                 · Logged in as <strong sec:authentication="name"></strong>
             </span>
+
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}"/>
+
+                <button type="submit" class="btn btn-ghost">
+                    Logout
+                </button>
+            </form>
         </div>
     </div>
 </div>
@@ -31,55 +46,60 @@
             <div>
                 <h1 class="card-title">New user</h1>
                 <div class="card-subtitle">
-                    Create a new account with username, password and role.
+                    Create a new application user and assign a role.
                 </div>
+            </div>
+            <div class="btn-row">
+                <!-- Back to users list -->
+                <a th:href="@{/users}" class="btn btn-ghost">
+                    ← Back to users
+                </a>
             </div>
         </div>
 
-        <!-- Form starts here with th:object so #fields works -->
+        <!-- Global validation summary (optional) -->
+        <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+            Please fix the errors below and try again.
+        </div>
+
         <form th:action="@{/users/new}" th:object="${userForm}" method="post">
 
-            <!-- CSRF -->
             <input type="hidden"
                    th:name="${_csrf.parameterName}"
                    th:value="${_csrf.token}"/>
 
-            <!-- Optional global error message -->
-            <div th:if="${#fields.hasErrors()}" class="alert alert-danger" style="margin-top: 1rem;">
-                Please fix the errors below.
-            </div>
-
-            <div class="form-grid" style="margin-top: 1rem;">
+            <div class="form-grid">
 
                 <!-- Username -->
                 <div class="form-field">
                     <label class="form-label" for="username">Username</label>
-                    <input id="username"
-                           type="text"
+                    <input type="text"
+                           id="username"
                            th:field="*{username}"
                            class="form-control"
-                           placeholder="e.g. admin"
-                           required>
+                           autofocus>
                     <div class="field-error"
                          th:if="${#fields.hasErrors('username')}"
-                         th:errors="*{username}"></div>
+                         th:errors="*{username}">
+                        Username error
+                    </div>
                 </div>
 
                 <!-- Password -->
                 <div class="form-field">
                     <label class="form-label" for="password">Password</label>
-                    <input id="password"
-                           type="password"
+                    <input type="password"
+                           id="password"
                            th:field="*{password}"
-                           class="form-control"
-                           placeholder="Set a password"
-                           required>
+                           class="form-control">
                     <div class="field-error"
                          th:if="${#fields.hasErrors('password')}"
-                         th:errors="*{password}"></div>
+                         th:errors="*{password}">
+                        Password error
+                    </div>
                 </div>
 
-                <!-- Role -->
+                <!-- Role select -->
                 <div class="form-field">
                     <label class="form-label" for="role">Role</label>
                     <select id="role"
@@ -88,21 +108,28 @@
                         <option th:each="r : ${roles}"
                                 th:value="${r}"
                                 th:text="${r}">
+                            ROLE
                         </option>
                     </select>
                     <div class="field-error"
                          th:if="${#fields.hasErrors('role')}"
-                         th:errors="*{role}"></div>
+                         th:errors="*{role}">
+                        Role error
+                    </div>
                 </div>
 
             </div>
 
             <div class="form-footer">
                 <a th:href="@{/users}" class="btn btn-ghost">Cancel</a>
+
                 <div class="form-footer-right">
-                    <button type="submit" class="btn btn-primary">Create user</button>
+                    <button type="submit" class="btn btn-primary">
+                        Create user
+                    </button>
                 </div>
             </div>
+
         </form>
 
     </div>
