@@ -118,7 +118,6 @@ public class AppUserController {
                 .orElseThrow(() ->
                         new IllegalArgumentException("User with id " + id + " does not exist"));
 
-        // simple validation: role required
         if (form.getRole() == null) {
             bindingResult.rejectValue("role", "role.null", "Role is required");
         }
@@ -130,8 +129,18 @@ public class AppUserController {
         }
 
 
-        user.setRole(form.getRole());
+        if (user.getRole() == UserRole.ADMIN && form.getRole() != UserRole.ADMIN) {
+            long adminCount = userRepository.countByRole(UserRole.ADMIN);
+            if (adminCount <= 1) {
+                bindingResult.reject("lastAdmin",
+                        "You cannot remove the last administrator’s admin role.");
+                model.addAttribute("roles", UserRole.values());
+                model.addAttribute("userId", id);
+                return "users/edit";
+            }
+        }
 
+        user.setRole(form.getRole());
 
         if (form.getPassword() != null && !form.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(form.getPassword()));
@@ -147,6 +156,8 @@ public class AppUserController {
         return "redirect:/users";
     }
 
+
+    @PostMapping("/{id}/toggle-enabled")
     public String toggleEnabled(@PathVariable Long id,
                                 RedirectAttributes redirectAttributes) {
 
