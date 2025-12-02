@@ -3,6 +3,7 @@ package com.marian_bt.contacts_app.controller;
 import com.marian_bt.contacts_app.domain.AppUser;
 import com.marian_bt.contacts_app.domain.UserRole;
 import com.marian_bt.contacts_app.repository.AppUserRepository;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Sort;
@@ -49,7 +50,7 @@ public class AppUserController {
     }
 
     @PostMapping("/new")
-    public String createUser(@ModelAttribute("userForm") CreateUserForm form,
+    public String createUser(@Valid @ModelAttribute("userForm") CreateUserForm form,
                              BindingResult bindingResult,
                              Model model,
                              RedirectAttributes redirectAttributes) {
