@@ -21,10 +21,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("contacts")
@@ -186,28 +188,47 @@ public class ContactController {
     public String handleImport(@RequestParam("file") MultipartFile file,
                                RedirectAttributes redirectAttributes) {
 
-        if (file.isEmpty()) {
-
-            redirectAttributes.addFlashAttribute("message", "Please select a CSV file to upload!");
+        if (file == null || file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Please select a CSV file to upload.");
             return "redirect:/contacts/import";
         }
 
-        try {
-            int imported = contactService.importContacts(file.getInputStream());
-            redirectAttributes.addFlashAttribute("message",
-                    imported + " contacts imported successfully!"
-            );
-            return  "redirect:/contacts";
-        } catch (ContactImportException e){
-            redirectAttributes.addFlashAttribute("error message",
-                    "Import failed " + e.getMessage()
-            );
+        String filename = file.getOriginalFilename();
+        if (filename == null || !filename.toLowerCase(Locale.ROOT).endsWith(".csv")) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "The uploaded file must be a .csv file.");
             return "redirect:/contacts/import";
-        }catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error message",
-                    "Unexpected error during import: " + e.getMessage()
-            );
+        }
+
+        try (InputStream is = file.getInputStream()) {
+
+            int imported = contactService.importContacts(is);
+
+            if (imported > 0) {
+                redirectAttributes.addFlashAttribute("message",
+                        imported + " contacts imported successfully.");
+            } else {
+                // File was syntactically OK, but no usable rows (e.g. no email values)
+                redirectAttributes.addFlashAttribute("message",
+                        "The file was processed, but no contacts were imported. " +
+                                "Make sure there is an 'email' column and that rows have email values.");
+            }
+
+            return "redirect:/contacts";
+
+        } catch (ContactImportException e) {
+            // Domain-level errors (missing headers, invalid values, etc.)
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Import failed: " + e.getMessage());
+            return "redirect:/contacts/import";
+
+        } catch (IOException e) {
+            // Low-level IO errors
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Could not read the uploaded file: " + e.getMessage());
             return "redirect:/contacts/import";
         }
     }
+
 }
