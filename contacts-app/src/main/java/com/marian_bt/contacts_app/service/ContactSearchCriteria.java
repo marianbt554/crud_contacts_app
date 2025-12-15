@@ -5,227 +5,173 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 public class ContactSearchCriteria {
-    private String        firstName;
-    private String        lastName;
-    private String        institution;
-    private String        email;
-    private String        persGroup;
-    private String        country;
-    private Boolean       coilExp;
-    private Boolean       mobilityFin;
-    private String        fundUse;
-    private String        postAddress;
-    private String        phone1;
-    private String        phone2;
-    private String        faculty;
-    private String        studyDomain;
-    private String        gender;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd 'T' HH:mm")
+    private String title;
+    private String firstName;
+    private String lastName;
+    private String gender;
+
+    private String email;
+    private String phone1;
+    private String phone2;
+    private String postAddress;
+
+    private String institution;
+    private String faculty;
+    private String studyDomain;
+    private String persGroup;
+    private String function;
+
+    private String country;
+    private String interest;
+    private String fundUse;
+    private String pastEvent;
+    private String comments;
+
+    private Boolean contactedByIngenium;
+    private Boolean coilExp;
+    private Boolean mobilityFin;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime createdAfter;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd 'T' HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime createdBefore;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd 'T' HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime updatedAfter;
-    @DateTimeFormat(pattern = "yyyy-MM-dd 'T' HH:mm")
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime updatedBefore;
 
-    private static String trimToNull(String value){
+    private static String trimToNull(String value) {
         if (value == null) return null;
         String trimmed = value.trim();
         return trimmed.isEmpty() ? null : trimmed;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
+    // --- Normalizing setters (important!) ---
+    public void setTitle(String title) { this.title = trimToNull(title); }
+    public void setFirstName(String firstName) { this.firstName = trimToNull(firstName); }
+    public void setLastName(String lastName) { this.lastName = trimToNull(lastName); }
+    public void setGender(String gender) { this.gender = trimToNull(gender); }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+    public void setEmail(String email) { this.email = trimToNull(email); }
+    public void setPhone1(String phone1) { this.phone1 = trimToNull(phone1); }
+    public void setPhone2(String phone2) { this.phone2 = trimToNull(phone2); }
+    public void setPostAddress(String postAddress) { this.postAddress = trimToNull(postAddress); }
 
-    public String getLastName() {
-        return lastName;
-    }
+    public void setInstitution(String institution) { this.institution = trimToNull(institution); }
+    public void setFaculty(String faculty) { this.faculty = trimToNull(faculty); }
+    public void setStudyDomain(String studyDomain) { this.studyDomain = trimToNull(studyDomain); }
+    public void setPersGroup(String persGroup) { this.persGroup = trimToNull(persGroup); }
+    public void setFunction(String function) { this.function = trimToNull(function); }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+    public void setCountry(String country) { this.country = trimToNull(country); }
+    public void setInterest(String interest) { this.interest = trimToNull(interest); }
+    public void setFundUse(String fundUse) { this.fundUse = trimToNull(fundUse); }
+    public void setPastEvent(String pastEvent) { this.pastEvent = trimToNull(pastEvent); }
+    public void setComments(String comments) { this.comments = trimToNull(comments); }
 
-    public String getInstitution() {
-        return institution;
-    }
+    // --- Getters ---
+    public String getTitle() { return title; }
+    public String getFirstName() { return firstName; }
+    public String getLastName() { return lastName; }
+    public String getGender() { return gender; }
 
-    public void setInstitution(String institution) {
-        this.institution = institution;
-    }
+    public String getEmail() { return email; }
+    public String getPhone1() { return phone1; }
+    public String getPhone2() { return phone2; }
+    public String getPostAddress() { return postAddress; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getInstitution() { return institution; }
+    public String getFaculty() { return faculty; }
+    public String getStudyDomain() { return studyDomain; }
+    public String getPersGroup() { return persGroup; }
+    public String getFunction() { return function; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getCountry() { return country; }
+    public String getInterest() { return interest; }
+    public String getFundUse() { return fundUse; }
+    public String getPastEvent() { return pastEvent; }
+    public String getComments() { return comments; }
 
-    public String getPersGroup() {
-        return persGroup;
-    }
+    public Boolean getContactedByIngenium() { return contactedByIngenium; }
+    public void setContactedByIngenium(Boolean contactedByIngenium) { this.contactedByIngenium = contactedByIngenium; }
 
-    public void setPersGroup(String persGroup) {
-        this.persGroup = persGroup;
-    }
+    public Boolean getCoilExp() { return coilExp; }
+    public void setCoilExp(Boolean coilExp) { this.coilExp = coilExp; }
 
-    public String getCountry() {
-        return country;
-    }
+    public Boolean getMobilityFin() { return mobilityFin; }
+    public void setMobilityFin(Boolean mobilityFin) { this.mobilityFin = mobilityFin; }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
+    public LocalDateTime getCreatedAfter() { return createdAfter; }
+    public void setCreatedAfter(LocalDateTime createdAfter) { this.createdAfter = createdAfter; }
 
-    public Boolean getCoilExp() {
-        return coilExp;
-    }
+    public LocalDateTime getCreatedBefore() { return createdBefore; }
+    public void setCreatedBefore(LocalDateTime createdBefore) { this.createdBefore = createdBefore; }
 
-    public void setCoilExp(Boolean coilExp) {
-        this.coilExp = coilExp;
-    }
+    public LocalDateTime getUpdatedAfter() { return updatedAfter; }
+    public void setUpdatedAfter(LocalDateTime updatedAfter) { this.updatedAfter = updatedAfter; }
 
-    public Boolean getMobilityFin() {
-        return mobilityFin;
-    }
+    public LocalDateTime getUpdatedBefore() { return updatedBefore; }
+    public void setUpdatedBefore(LocalDateTime updatedBefore) { this.updatedBefore = updatedBefore; }
 
-    public void setMobilityFin(Boolean mobilityFin) {
-        this.mobilityFin = mobilityFin;
-    }
-
-    public String getFundUse() {
-        return fundUse;
-    }
-
-    public void setFundUse(String fundUse) {
-        this.fundUse = fundUse;
-    }
-
-    public String getPostAddress() {
-        return postAddress;
-    }
-
-    public void setPostAddress(String postAddress) {
-        this.postAddress = postAddress;
-    }
-
-    public String getPhone1() {
-        return phone1;
-    }
-
-    public void setPhone1(String phone1) {
-        this.phone1 = phone1;
-    }
-
-    public String getPhone2() {
-        return phone2;
-    }
-
-    public void setPhone2(String phone2) {
-        this.phone2 = phone2;
-    }
-
-    public String getFaculty() {
-        return faculty;
-    }
-
-    public void setFaculty(String faculty) {
-        this.faculty = faculty;
-    }
-
-    public String getStudyDomain() {
-        return studyDomain;
-    }
-
-    public void setStudyDomain(String studyDomain) {
-        this.studyDomain = studyDomain;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public LocalDateTime getCreatedAfter() {
-        return createdAfter;
-    }
-
-    public void setCreatedAfter(LocalDateTime createdAfter) {
-        this.createdAfter = createdAfter;
-    }
-
-    public LocalDateTime getCreatedBefore() {
-        return createdBefore;
-    }
-
-    public void setCreatedBefore(LocalDateTime createdBefore) {
-        this.createdBefore = createdBefore;
-    }
-
-    public LocalDateTime getUpdatedAfter() {
-        return updatedAfter;
-    }
-
-    public void setUpdatedAfter(LocalDateTime updatedAfter) {
-        this.updatedAfter = updatedAfter;
-    }
-
-    public LocalDateTime getUpdatedBefore() {
-        return updatedBefore;
-    }
-
-    public void setUpdatedBefore(LocalDateTime updatedBefore) {
-        this.updatedBefore = updatedBefore;
-    }
-
-    public boolean isEmpty(){
-        return isBlank(firstName)
+    // --- Helpers ---
+    public boolean isEmpty() {
+        return isBlank(title)
+                && isBlank(firstName)
                 && isBlank(lastName)
-                && isBlank(institution)
+                && isBlank(gender)
                 && isBlank(email)
-                && isBlank(persGroup)
-                && isBlank(country)
-                && isBlank(fundUse)
-                && isBlank(postAddress)
                 && isBlank(phone1)
                 && isBlank(phone2)
+                && isBlank(postAddress)
+                && isBlank(institution)
                 && isBlank(faculty)
                 && isBlank(studyDomain)
-                && isBlank(gender)
+                && isBlank(persGroup)
+                && isBlank(function)
+                && isBlank(country)
+                && isBlank(interest)
+                && isBlank(fundUse)
+                && isBlank(pastEvent)
+                && isBlank(comments)
+                && contactedByIngenium == null
                 && coilExp == null
                 && mobilityFin == null
-                && createdAfter== null
+                && createdAfter == null
                 && createdBefore == null
                 && updatedAfter == null
                 && updatedBefore == null;
-
     }
 
-    private boolean isBlank(String value){
+    private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
     }
 
     @Override
     public String toString() {
         return "ContactSearchCriteria{" +
-                "firstName='" + firstName + '\'' +
+                "title='" + title + '\'' +
+                ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", institution='" + institution + '\'' +
+                ", gender='" + gender + '\'' +
                 ", email='" + email + '\'' +
+                ", phone1='" + phone1 + '\'' +
+                ", phone2='" + phone2 + '\'' +
+                ", postAddress='" + postAddress + '\'' +
+                ", institution='" + institution + '\'' +
+                ", faculty='" + faculty + '\'' +
+                ", studyDomain='" + studyDomain + '\'' +
                 ", persGroup='" + persGroup + '\'' +
+                ", function='" + function + '\'' +
                 ", country='" + country + '\'' +
+                ", interest='" + interest + '\'' +
+                ", fundUse='" + fundUse + '\'' +
+                ", pastEvent='" + pastEvent + '\'' +
+                ", comments='" + comments + '\'' +
+                ", contactedByIngenium=" + contactedByIngenium +
                 ", coilExp=" + coilExp +
                 ", mobilityFin=" + mobilityFin +
                 ", createdAfter=" + createdAfter +

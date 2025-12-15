@@ -58,9 +58,13 @@ public class ContactController {
     }
 
     @GetMapping("/search")
-    public String SearchContacts(@ModelAttribute("criteria") ContactSearchCriteria criteria,
+    public String searchContacts(@ModelAttribute("criteria") ContactSearchCriteria criteria,
                                  @PageableDefault(size = 20) Pageable pageable,
                                  Model model) {
+
+        // if user changes filters, you often want to reset to first page (optional)
+        // pageable = PageRequest.of(0, pageable.getPageSize(), pageable.getSort());
+
         Page<Contact> page = contactService.searchContacts(criteria, pageable);
         model.addAttribute("contactsPage", page);
         model.addAttribute("contacts", page.getContent());
@@ -68,6 +72,7 @@ public class ContactController {
         model.addAttribute("baseUrl", "/contacts/search");
         return "contacts/list";
     }
+
 
     @GetMapping("/new")
     public String ShowCreateContactForm(Model model) {
@@ -131,29 +136,43 @@ public class ContactController {
         List<Contact> contacts = contactService.searchContacts(criteria);
 
         response.setContentType("text/csv;charset=UTF-8");
-        String fileName = "contacts-" + LocalDateTime.now() + ".csv";
+
+        DateTimeFormatter fileDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+        String fileName = "contacts-" + LocalDateTime.now().format(fileDtf) + ".csv";
         response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         try (PrintWriter writer = response.getWriter()) {
-            writer.println("id,title,firstName,lastName,gender,email,phone1,phone2,institution,faculty,studyDomain,persGroup,function,country,coilExp,mobilityFin,createdAt,updatedAt");
+
+            // ✅ Added contactedByIngenium column (right before coilExp)
+            writer.println(
+                    "id,title,firstName,lastName,gender,email,phone1,phone2," +
+                            "institution,faculty,studyDomain,persGroup,function,country," +
+                            "contactedByIngenium,coilExp,mobilityFin,createdAt,updatedAt"
+            );
+
             for (Contact c : contacts) {
-                writer.print(safe(c.getId()));           writer.print(',');
-                writer.print(csv(c.getTitle()));         writer.print(',');
-                writer.print(csv(c.getFirstName()));     writer.print(',');
-                writer.print(csv(c.getLastName()));      writer.print(',');
-                writer.print(csv(c.getGender()));        writer.print(',');
-                writer.print(csv(c.getEmail()));         writer.print(',');
-                writer.print(csv(c.getPhone1()));        writer.print(',');
-                writer.print(csv(c.getPhone2()));        writer.print(',');
-                writer.print(csv(c.getInstitution()));   writer.print(',');
-                writer.print(csv(c.getFaculty()));       writer.print(',');
-                writer.print(csv(c.getStudyDomain()));   writer.print(',');
-                writer.print(csv(c.getPersGroup()));     writer.print(',');
-                writer.print(csv(c.getFunction()));      writer.print(',');
-                writer.print(csv(c.getCountry()));       writer.print(',');
-                writer.print(csv(Boolean.toString(c.isCoilExp())));     writer.print(',');
-                writer.print(csv(Boolean.toString(c.isMobilityFin()))); writer.print(',');
+                writer.print(safe(c.getId()));                   writer.print(',');
+                writer.print(csv(c.getTitle()));                 writer.print(',');
+                writer.print(csv(c.getFirstName()));             writer.print(',');
+                writer.print(csv(c.getLastName()));              writer.print(',');
+                writer.print(csv(c.getGender()));                writer.print(',');
+                writer.print(csv(c.getEmail()));                 writer.print(',');
+                writer.print(csv(c.getPhone1()));                writer.print(',');
+                writer.print(csv(c.getPhone2()));                writer.print(',');
+                writer.print(csv(c.getInstitution()));           writer.print(',');
+                writer.print(csv(c.getFaculty()));               writer.print(',');
+                writer.print(csv(c.getStudyDomain()));           writer.print(',');
+                writer.print(csv(c.getPersGroup()));             writer.print(',');
+                writer.print(csv(c.getFunction()));              writer.print(',');
+                writer.print(csv(c.getCountry()));               writer.print(',');
+
+                // ✅ New field
+                writer.print(csv(Boolean.toString(c.isContactedByIngenium()))); writer.print(',');
+
+                writer.print(csv(Boolean.toString(c.isCoilExp())));             writer.print(',');
+                writer.print(csv(Boolean.toString(c.isMobilityFin())));         writer.print(',');
 
                 LocalDateTime createdAt = c.getCreatedAt();
                 LocalDateTime updatedAt = c.getUpdatedAt();
@@ -176,6 +195,7 @@ public class ContactController {
         String escaped = value.replace("\"", "\"\"");
         return "\"" + escaped + "\"";
     }
+
 
     @GetMapping("/import")
     @PreAuthorize("hasRole('ADMIN')")

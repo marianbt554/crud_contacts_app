@@ -42,7 +42,6 @@
 <main class="app-main">
     <div class="card">
 
-        <!-- Header row: title + New contact button -->
         <div class="card-header">
             <div>
                 <h1 class="card-title">Contacts</h1>
@@ -62,13 +61,20 @@
                     Import CSV
                 </a>
             </div>
-
-
         </div>
 
-        <!-- Search form (advanced search using ContactSearchCriteria) -->
+        <!-- Flash messages -->
+        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <!-- Search form -->
         <form th:action="@{/contacts/search}" th:object="${criteria}" method="get">
             <div class="form-grid">
+
+                <div class="form-field">
+                    <label class="form-label">Title</label>
+                    <input type="text" th:field="*{title}" class="form-control"/>
+                </div>
 
                 <div class="form-field">
                     <label class="form-label">First name</label>
@@ -81,8 +87,33 @@
                 </div>
 
                 <div class="form-field">
+                    <label class="form-label">Gender</label>
+                    <select th:field="*{gender}" class="form-select">
+                        <option th:value="${null}">Any</option>
+                        <option th:value="male">male</option>
+                        <option th:value="female">female</option>
+                        <option th:value="diverse">diverse</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
                     <label class="form-label">Email</label>
                     <input type="text" th:field="*{email}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Phone 1</label>
+                    <input type="text" th:field="*{phone1}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Phone 2</label>
+                    <input type="text" th:field="*{phone2}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Post address</label>
+                    <input type="text" th:field="*{postAddress}" class="form-control"/>
                 </div>
 
                 <div class="form-field">
@@ -91,13 +122,52 @@
                 </div>
 
                 <div class="form-field">
+                    <label class="form-label">Faculty</label>
+                    <input type="text" th:field="*{faculty}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Study domain</label>
+                    <input type="text" th:field="*{studyDomain}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
                     <label class="form-label">Group</label>
                     <input type="text" th:field="*{persGroup}" class="form-control"/>
                 </div>
 
                 <div class="form-field">
+                    <label class="form-label">Job function</label>
+                    <input type="text" th:field="*{function}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
                     <label class="form-label">Country</label>
                     <input type="text" th:field="*{country}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Interest</label>
+                    <input type="text" th:field="*{interest}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Fund use</label>
+                    <input type="text" th:field="*{fundUse}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Past event</label>
+                    <input type="text" th:field="*{pastEvent}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Contacted by INGENIUM</label>
+                    <select th:field="*{contactedByIngenium}" class="form-select">
+                        <option th:value="${null}">Any</option>
+                        <option th:value="true">Yes</option>
+                        <option th:value="false">No</option>
+                    </select>
                 </div>
 
                 <div class="form-field">
@@ -119,6 +189,11 @@
                 </div>
 
                 <div class="form-field">
+                    <label class="form-label">Comments</label>
+                    <input type="text" th:field="*{comments}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
                     <label class="form-label">Created after</label>
                     <input type="datetime-local" th:field="*{createdAfter}" class="form-control"/>
                 </div>
@@ -126,6 +201,16 @@
                 <div class="form-field">
                     <label class="form-label">Created before</label>
                     <input type="datetime-local" th:field="*{createdBefore}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Updated after</label>
+                    <input type="datetime-local" th:field="*{updatedAfter}" class="form-control"/>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Updated before</label>
+                    <input type="datetime-local" th:field="*{updatedBefore}" class="form-control"/>
                 </div>
 
             </div>
@@ -166,6 +251,7 @@
                     <th>Group</th>
                     <th>Function</th>
                     <th>Country</th>
+                    <th>Contacted by INGENIUM</th>
                     <th>COIL exp</th>
                     <th>Mobility fin</th>
                     <th>Created at</th>
@@ -177,53 +263,54 @@
                 </thead>
 
                 <tbody>
-                <!-- row index is continuous across pages -->
                 <tr th:each="contact, iter : ${contacts}">
                     <td th:text="${contactsPage.number * contactsPage.size + iter.index + 1}">1</td>
-                    <td th:text="${contact.id}"> </td>
-                    <td th:text="${contact.title}"> </td>
-                    <td th:text="${contact.firstName}"> </td>
-                    <td th:text="${contact.lastName}"> </td>
-                    <td th:text="${contact.gender}"> </td>
-                    <td th:text="${contact.email}"> </td>
-                    <td th:text="${contact.phone1}"> </td>
-                    <td th:text="${contact.phone2}"> </td>
-                    <td th:text="${contact.institution}"> </td>
-                    <td th:text="${contact.faculty}"> </td>
-                    <td th:text="${contact.studyDomain}"> </td>
-                    <td th:text="${contact.persGroup}"> </td>
-                    <td th:text="${contact.function}"> </td>
-                    <td th:text="${contact.country}"> </td>
+                    <td th:text="${contact.id}"></td>
+                    <td th:text="${contact.title}"></td>
+                    <td th:text="${contact.firstName}"></td>
+                    <td th:text="${contact.lastName}"></td>
+                    <td th:text="${contact.gender}"></td>
+                    <td th:text="${contact.email}"></td>
+                    <td th:text="${contact.phone1}"></td>
+                    <td th:text="${contact.phone2}"></td>
+                    <td th:text="${contact.institution}"></td>
+                    <td th:text="${contact.faculty}"></td>
+                    <td th:text="${contact.studyDomain}"></td>
+                    <td th:text="${contact.persGroup}"></td>
+                    <td th:text="${contact.function}"></td>
+                    <td th:text="${contact.country}"></td>
 
-                    <!-- COIL experience pill -->
+                    <td>
+                        <span th:if="${contact.contactedByIngenium}" class="badge badge-yes">Yes</span>
+                        <span th:if="${!contact.contactedByIngenium}" class="badge badge-no">No</span>
+                    </td>
+
                     <td>
                         <span th:if="${contact.coilExp}" class="badge badge-yes">Yes</span>
                         <span th:if="${!contact.coilExp}" class="badge badge-no">No</span>
                     </td>
 
-                    <!-- Mobility funding pill -->
                     <td>
                         <span th:if="${contact.mobilityFin}" class="badge badge-yes">Yes</span>
                         <span th:if="${!contact.mobilityFin}" class="badge badge-no">No</span>
                     </td>
 
-                    <!-- Formatted timestamps + audit users -->
-                    <td th:text="${contact.createdAt != null ? #temporals.format(contact.createdAt, 'yyyy-MM-dd HH:mm') : ''}">
-                        2025-01-01 10:00
-                    </td>
-                    <td th:text="${contact.createdBy}"> </td>
-                    <td th:text="${contact.updatedAt != null ? #temporals.format(contact.updatedAt, 'yyyy-MM-dd HH:mm') : ''}">
-                        2025-01-02 11:00
-                    </td>
-                    <td th:text="${contact.updatedBy}"> </td>
+                    <td th:text="${contact.createdAt != null ? #temporals.format(contact.createdAt, 'yyyy-MM-dd HH:mm') : ''}"></td>
+                    <td th:text="${contact.createdBy}"></td>
+                    <td th:text="${contact.updatedAt != null ? #temporals.format(contact.updatedAt, 'yyyy-MM-dd HH:mm') : ''}"></td>
+                    <td th:text="${contact.updatedBy}"></td>
 
                     <td class="actions-cell">
                         <a th:href="@{/contacts/{id}(id=${contact.id})}" class="btn btn-ghost">View</a>
 
                         <span sec:authorize="hasRole('ADMIN')">
                             <a th:href="@{/contacts/{id}/edit(id=${contact.id})}" class="btn btn-secondary">Edit</a>
+
                             <form th:action="@{/contacts/{id}/delete(id=${contact.id})}"
                                   method="post" style="display:inline">
+                                <input type="hidden"
+                                       th:name="${_csrf.parameterName}"
+                                       th:value="${_csrf.token}"/>
                                 <button type="submit"
                                         class="btn btn-danger"
                                         onclick="return confirm('Delete this contact?');">
@@ -235,7 +322,7 @@
                 </tr>
 
                 <tr th:if="${#lists.isEmpty(contacts)}">
-                    <td colspan="22" class="text-muted">
+                    <td colspan="23" class="text-muted">
                         No contacts found.
                     </td>
                 </tr>
@@ -248,7 +335,6 @@
             <nav class="pagination-nav">
                 <ul class="pagination-list">
 
-                    <!-- Previous -->
                     <li th:classappend="${contactsPage.first} ? ' disabled'">
                         <span class="page-link" th:if="${contactsPage.first}">Previous</span>
                         <a class="page-link"
@@ -258,7 +344,6 @@
                         </a>
                     </li>
 
-                    <!-- Page numbers -->
                     <li th:each="pageNum : ${#numbers.sequence(0, contactsPage.totalPages - 1)}"
                         th:classappend="${pageNum == contactsPage.number} ? ' active'">
                         <a class="page-link"
@@ -268,7 +353,6 @@
                         </a>
                     </li>
 
-                    <!-- Next -->
                     <li th:classappend="${contactsPage.last} ? ' disabled'">
                         <span class="page-link" th:if="${contactsPage.last}">Next</span>
                         <a class="page-link"

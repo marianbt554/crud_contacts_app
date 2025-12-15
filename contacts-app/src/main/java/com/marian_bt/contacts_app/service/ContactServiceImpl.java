@@ -66,7 +66,7 @@ public class ContactServiceImpl implements ContactService {
         existing.setMobilityFin(updatedContact.isMobilityFin());
         existing.setFundUse(updatedContact.getFundUse());
         existing.setPastEvent(updatedContact.getPastEvent());
-        existing.setContactPerson(updatedContact.getContactPerson());
+        existing.setContactedByIngenium(updatedContact.isContactedByIngenium());
         existing.setGender(updatedContact.getGender());
         existing.setComments(updatedContact.getComments());
 
@@ -88,6 +88,7 @@ public class ContactServiceImpl implements ContactService {
             return getAllContacts();
         }
 
+        String title       = normalize(criteria.getTitle());
         String firstName   = normalize(criteria.getFirstName());
         String lastName    = normalize(criteria.getLastName());
         String institution = normalize(criteria.getInstitution());
@@ -101,16 +102,22 @@ public class ContactServiceImpl implements ContactService {
         String faculty     = normalize(criteria.getFaculty());
         String studyDomain = normalize(criteria.getStudyDomain());
         String gender      = normalize(criteria.getGender());
+        String function    = normalize(criteria.getFunction());
+        String interest    = normalize(criteria.getInterest());
+        String pastEvent   = normalize(criteria.getPastEvent());
+        String comments    = normalize(criteria.getComments());
+
+        Boolean contactedByIngenium = criteria.getContactedByIngenium();
+        Boolean coilExp     = criteria.getCoilExp();
+        Boolean mobilityFin = criteria.getMobilityFin();
 
         LocalDateTime createdAfter  = criteria.getCreatedAfter();
         LocalDateTime createdBefore = criteria.getCreatedBefore();
         LocalDateTime updatedAfter  = criteria.getUpdatedAfter();
         LocalDateTime updatedBefore = criteria.getUpdatedBefore();
 
-        Boolean coilExp     = criteria.getCoilExp();
-        Boolean mobilityFin = criteria.getMobilityFin();
-
         return contactRepository.searchContacts(
+                title,
                 firstName,
                 lastName,
                 institution,
@@ -124,6 +131,11 @@ public class ContactServiceImpl implements ContactService {
                 faculty,
                 studyDomain,
                 gender,
+                function,
+                interest,
+                pastEvent,
+                comments,
+                contactedByIngenium,
                 coilExp,
                 mobilityFin,
                 createdAfter,
@@ -160,6 +172,7 @@ public class ContactServiceImpl implements ContactService {
             return getAllContacts(pageable);
         }
 
+        String title       = normalize(criteria.getTitle());
         String firstName   = normalize(criteria.getFirstName());
         String lastName    = normalize(criteria.getLastName());
         String institution = normalize(criteria.getInstitution());
@@ -173,18 +186,24 @@ public class ContactServiceImpl implements ContactService {
         String faculty     = normalize(criteria.getFaculty());
         String studyDomain = normalize(criteria.getStudyDomain());
         String gender      = normalize(criteria.getGender());
+        String function    = normalize(criteria.getFunction());
+        String interest    = normalize(criteria.getInterest());
+        String pastEvent   = normalize(criteria.getPastEvent());
+        String comments    = normalize(criteria.getComments());
+
+        Boolean contactedByIngenium = criteria.getContactedByIngenium();
+        Boolean coilExp     = criteria.getCoilExp();
+        Boolean mobilityFin = criteria.getMobilityFin();
 
         LocalDateTime createdAfter  = criteria.getCreatedAfter();
         LocalDateTime createdBefore = criteria.getCreatedBefore();
         LocalDateTime updatedAfter  = criteria.getUpdatedAfter();
         LocalDateTime updatedBefore = criteria.getUpdatedBefore();
 
-        Boolean coilExp     = criteria.getCoilExp();
-        Boolean mobilityFin = criteria.getMobilityFin();
-
         Pageable sortedPageable = withDefaultSort(pageable);
 
         return contactRepository.searchContactsPaged(
+                title,
                 firstName,
                 lastName,
                 institution,
@@ -198,6 +217,11 @@ public class ContactServiceImpl implements ContactService {
                 faculty,
                 studyDomain,
                 gender,
+                function,
+                interest,
+                pastEvent,
+                comments,
+                contactedByIngenium,
                 coilExp,
                 mobilityFin,
                 createdAfter,
@@ -221,13 +245,13 @@ public class ContactServiceImpl implements ContactService {
         try (BufferedReader reader =
                      new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
-            // 1) Read header row
+
             String headerLine = reader.readLine();
             if (headerLine == null || headerLine.isBlank()) {
                 throw new ContactImportException("CSV is empty or missing the header row.");
             }
 
-            // Strip BOM if present and parse as CSV
+
             headerLine = headerLine.replace("\uFEFF", "");
             List<String> headerCols = parseCsvLine(headerLine);
 
@@ -242,7 +266,7 @@ public class ContactServiceImpl implements ContactService {
                 }
             }
 
-            // We require at least an "email" column so we can identify contacts
+
             if (!hasAnyHeader(headerIndex, "email", "e-mail")) {
                 throw new ContactImportException(
                         "CSV header must contain an 'email' column (exact name: email)."
@@ -263,7 +287,7 @@ public class ContactServiceImpl implements ContactService {
                 // --- REQUIRED: email (identifies contact) ---
                 String email = getColumn(headerIndex, cols, "email", "e-mail");
                 if (email == null || email.isBlank()) {
-                    // no email → skip this row (or you could throw if you want it stricter)
+
                     continue;
                 }
                 email = email.trim();
@@ -274,7 +298,7 @@ public class ContactServiceImpl implements ContactService {
 
                 contact.setEmail(email);
 
-                // --- OPTIONAL FIELDS (set only if present) ---
+
                 contact.setTitle(getColumn(headerIndex, cols, "title"));
 
                 contact.setFirstName(getColumn(headerIndex, cols,
@@ -305,15 +329,25 @@ public class ContactServiceImpl implements ContactService {
 
                 contact.setCountry(getColumn(headerIndex, cols, "country"));
 
-                String coilExpStr = getColumn(headerIndex, cols,
-                        "coilexp", "coil_exp", "coil experience");
-                contact.setCoilExp(parseBoolean(coilExpStr));
+                if (hasHeader(headerIndex, "coilexp", "coil_exp", "coil experience")) {
+                    Boolean b = parseBooleanNullable(getColumn(headerIndex, cols, "coilexp", "coil_exp", "coil experience"));
+                    if (b != null) contact.setCoilExp(b);
+                }
 
-                String mobilityFinStr = getColumn(headerIndex, cols,
-                        "mobilityfin", "mobility_fin", "mobility financing");
-                contact.setMobilityFin(parseBoolean(mobilityFinStr));
+                if (hasHeader(headerIndex, "mobilityfin", "mobility_fin", "mobility financing")) {
+                    Boolean b = parseBooleanNullable(getColumn(headerIndex, cols, "mobilityfin", "mobility_fin", "mobility financing"));
+                    if (b != null) contact.setMobilityFin(b);
+                }
 
-                // We still ignore createdAt / updatedAt in the CSV – auditing handles them.
+                if (hasHeader(headerIndex, "contactedbyingenium", "contacted_by_ingenium", "contacted by ingenium", "contactedbyingenium")) {
+                    Boolean b = parseBooleanNullable(getColumn(headerIndex, cols,
+                            "contactedbyingenium", "contacted_by_ingenium", "contacted by ingenium"));
+                    if (b != null) contact.setContactedByIngenium(b);
+                }
+
+
+
+
 
                 contactRepository.save(contact);
                 count++;
@@ -355,6 +389,31 @@ public class ContactServiceImpl implements ContactService {
         String v = value.trim().toLowerCase(Locale.ROOT);
         return v.equals("true") || v.equals("yes") || v.equals("1") || v.equals("y");
     }
+
+    private boolean hasHeader(Map<String, Integer> headerIndex, String... names) {
+        return hasAnyHeader(headerIndex, names);
+    }
+
+    private Boolean parseBooleanNullable(String value) {
+        if (value == null) return null;
+
+        String v = value.trim().toLowerCase(Locale.ROOT);
+        if (v.isEmpty()) return null;
+
+        // true values
+        if (v.equals("true") || v.equals("yes") || v.equals("y") || v.equals("1")) {
+            return Boolean.TRUE;
+        }
+
+        // false values
+        if (v.equals("false") || v.equals("no") || v.equals("n") || v.equals("0")) {
+            return Boolean.FALSE;
+        }
+
+        // invalid/unknown -> ignore field (don’t overwrite existing)
+        return null;
+    }
+
 
 
     private java.util.List<String> parseCsvLine(String line) {

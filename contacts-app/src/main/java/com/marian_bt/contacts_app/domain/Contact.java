@@ -59,14 +59,15 @@ public class Contact  {
     private boolean          mobilityFin;
     private String           fundUse;
     private String           pastEvent;
-    private String           contactPerson;
+    @Column (name="contacted_by_ingenium", nullable = false)
+    private boolean          contactedByIngenium;
     @NotBlank
     @Column(nullable = false)
     @Pattern(
             regexp = "^(?i)(male|female|diverse)$",
             message = "Gender must be one of : male, female, diverse."
     )
-    private String gender;
+    private String           gender;
     private String           comments;
 
     @CreatedDate
@@ -90,17 +91,7 @@ public class Contact  {
 
     }
 
-    public Contact(String firstName,
-                   String lastName,
-                   String institution,
-                   String email,
-                   String gender){
-        this.firstName =   firstName;
-        this.lastName =    lastName;
-        this.institution = institution;
-        this.email =       email;
-        this.gender =      gender;
-    }
+
 
     public String getTitle() {
         return title;
@@ -254,12 +245,12 @@ public class Contact  {
         this.pastEvent = pastEvent;
     }
 
-    public String getContactPerson() {
-        return contactPerson;
+    public boolean isContactedByIngenium() {
+        return contactedByIngenium;
     }
 
-    public void setContactPerson(String contactPerson) {
-        this.contactPerson = contactPerson;
+    public void setContactedByIngenium(boolean contactedByIngenium) {
+        this.contactedByIngenium = contactedByIngenium;
     }
 
     public String getGender() {
@@ -314,15 +305,4 @@ public class Contact  {
         this.updatedBy = updatedBy;
     }
 
-    @Override
-    public String toString(){
-        return "Contact{"+
-                "id=" + id +
-                ", firstName =' " +    firstName + '\''+
-                ", lastName = ' " +    lastName + '\'' +
-                ", institution = ' " + institution + '\'' +
-                ", email = ' " +       email + '\'' +
-                ", gender = ' " +      gender + '\'' +
-                '}';
-    }
 }

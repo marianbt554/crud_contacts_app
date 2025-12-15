@@ -63,7 +63,6 @@
         </div>
 
         <div th:if="${contact != null}">
-            <!-- Basic info -->
             <section class="form-section">
                 <h2 class="form-section-title">Basic information</h2>
                 <div class="detail-grid">
@@ -106,7 +105,6 @@
                 </div>
             </section>
 
-            <!-- Contact details -->
             <section class="form-section">
                 <h2 class="form-section-title">Contact details</h2>
                 <div class="detail-grid">
@@ -148,7 +146,6 @@
                 </div>
             </section>
 
-            <!-- Institution & academic -->
             <section class="form-section">
                 <h2 class="form-section-title">Institution & academic</h2>
                 <div class="detail-grid">
@@ -171,7 +168,6 @@
                 </div>
             </section>
 
-            <!-- Additional -->
             <section class="form-section">
                 <h2 class="form-section-title">Additional details</h2>
                 <div class="detail-grid">
@@ -192,8 +188,11 @@
                     </div>
 
                     <div class="detail-item">
-                        <div class="detail-label">Contact person</div>
-                        <div class="detail-value" th:text="${contact.contactPerson}">person</div>
+                        <div class="detail-label">Contacted by INGENIUM</div>
+                        <div class="detail-value">
+                            <span th:if="${contact.contactedByIngenium}" class="badge badge-yes">Yes</span>
+                            <span th:if="${!contact.contactedByIngenium}" class="badge badge-no">No</span>
+                        </div>
                     </div>
 
                     <div class="detail-item">
@@ -220,7 +219,6 @@
                 </div>
             </section>
 
-            <!-- Audit -->
             <section class="form-section">
                 <h2 class="form-section-title">Audit</h2>
                 <div class="detail-grid">
@@ -238,7 +236,6 @@
                         <div class="detail-value" th:text="${contact.createdBy}">user</div>
                     </div>
 
-                    <!-- Only show when there was a real update -->
                     <div class="detail-item"
                          th:if="${contact.updatedAt != null and contact.updatedAt != contact.createdAt}">
                         <div class="detail-label">Updated at</div>

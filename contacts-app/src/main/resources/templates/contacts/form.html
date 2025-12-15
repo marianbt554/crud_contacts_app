@@ -59,23 +59,18 @@
             </div>
         </div>
 
-        <!-- The actual form -->
         <form th:action="@{/contacts/save}" th:object="${contact}" method="post">
 
-            <!-- CSRF -->
             <input type="hidden"
                    th:name="${_csrf.parameterName}"
                    th:value="${_csrf.token}"/>
 
-            <!-- ID (for edit) -->
             <input type="hidden" th:if="*{id != null}" th:field="*{id}"/>
 
-            <!-- Global errors (MUST be inside the form so #fields has context) -->
             <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
                 Please correct the errors below.
             </div>
 
-            <!-- Basic info -->
             <section class="form-section">
                 <h2 class="form-section-title">Basic information</h2>
                 <div class="form-grid">
@@ -119,7 +114,6 @@
                 </div>
             </section>
 
-            <!-- Contact details -->
             <section class="form-section">
                 <h2 class="form-section-title">Contact details</h2>
                 <div class="form-grid">
@@ -157,7 +151,6 @@
                 </div>
             </section>
 
-            <!-- Institution & academic -->
             <section class="form-section">
                 <h2 class="form-section-title">Institution & academic</h2>
                 <div class="form-grid">
@@ -183,7 +176,6 @@
                 </div>
             </section>
 
-            <!-- Additional details -->
             <section class="form-section">
                 <h2 class="form-section-title">Additional details</h2>
                 <div class="form-grid">
@@ -207,9 +199,14 @@
                     </div>
 
                     <div class="form-field">
-                        <label class="form-label">Contact person</label>
-                        <input type="text" th:field="*{contactPerson}" class="form-control">
-                        <div class="field-error" th:errors="*{contactPerson}"></div>
+                        <label class="form-label">Contacted by INGENIUM</label>
+                        <div class="form-checkbox-row">
+                            <label>
+                                <input type="checkbox" th:field="*{contactedByIngenium}">
+                                Contacted by INGENIUM
+                            </label>
+                        </div>
+                        <div class="field-error" th:errors="*{contactedByIngenium}"></div>
                     </div>
 
                     <div class="form-field">
@@ -243,7 +240,6 @@
                 </div>
             </section>
 
-            <!-- Audit (read-only) -->
             <section class="form-section" th:if="*{id != null}">
                 <h2 class="form-section-title">Audit</h2>
                 <div class="detail-grid">
@@ -277,7 +273,6 @@
                 </div>
             </section>
 
-            <!-- Footer / buttons -->
             <div class="form-footer">
                 <span class="text-muted">
                     Fields marked with * are required.
