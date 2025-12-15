@@ -11,9 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ContactServiceImpl implements ContactService {
@@ -219,65 +217,103 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public int importContacts (InputStream inputStream) {
+    public int importContacts(InputStream inputStream) {
         try (BufferedReader reader =
                      new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
-            String header = reader.readLine(); // first line with column names
-            if (header == null) {
-                return 0;
+            // 1) Read header row
+            String headerLine = reader.readLine();
+            if (headerLine == null || headerLine.isBlank()) {
+                throw new ContactImportException("CSV is empty or missing the header row.");
+            }
+
+            // Strip BOM if present and parse as CSV
+            headerLine = headerLine.replace("\uFEFF", "");
+            List<String> headerCols = parseCsvLine(headerLine);
+
+            // Build header name -> index map (lowercased + trimmed)
+            Map<String, Integer> headerIndex = new HashMap<>();
+            for (int i = 0; i < headerCols.size(); i++) {
+                String raw = headerCols.get(i);
+                if (raw == null) continue;
+                String normalized = raw.trim().toLowerCase(Locale.ROOT);
+                if (!normalized.isEmpty()) {
+                    headerIndex.put(normalized, i);
+                }
+            }
+
+            // We require at least an "email" column so we can identify contacts
+            if (!hasAnyHeader(headerIndex, "email", "e-mail")) {
+                throw new ContactImportException(
+                        "CSV header must contain an 'email' column (exact name: email)."
+                );
             }
 
             int count = 0;
             String line;
 
+            // 2) Process data rows
             while ((line = reader.readLine()) != null) {
                 if (line.isBlank()) {
                     continue;
                 }
 
-                var cols = parseCsvLine(line);
+                List<String> cols = parseCsvLine(line);
 
-                // Expect at least the columns you export:
-                // id, title, firstName, lastName, gender, email, phone1, phone2,
-                // institution, faculty, studyDomain, persGroup, function,
-                // country, coilExp, mobilityFin, createdAt, updatedAt
-                if (cols.size() < 17) {
-                    throw new ContactImportException("Invalid column count in line: " + line);
-                }
-
-                String email = unquote(cols.get(5));
+                // --- REQUIRED: email (identifies contact) ---
+                String email = getColumn(headerIndex, cols, "email", "e-mail");
                 if (email == null || email.isBlank()) {
-                    // no email → skip (or you could throw)
+                    // no email → skip this row (or you could throw if you want it stricter)
                     continue;
                 }
+                email = email.trim();
 
                 Contact contact = contactRepository
                         .findByEmailIgnoreCase(email)
                         .orElseGet(Contact::new);
 
-                // Fill / update fields
-                contact.setTitle(unquote(cols.get(1)));
-                contact.setFirstName(unquote(cols.get(2)));
-                contact.setLastName(unquote(cols.get(3)));
-                contact.setGender(unquote(cols.get(4)));
                 contact.setEmail(email);
-                contact.setPhone1(unquote(cols.get(6)));
-                contact.setPhone2(unquote(cols.get(7)));
-                contact.setInstitution(unquote(cols.get(8)));
-                contact.setFaculty(unquote(cols.get(9)));
-                contact.setStudyDomain(unquote(cols.get(10)));
-                contact.setPersGroup(unquote(cols.get(11)));
-                contact.setFunction(unquote(cols.get(12)));
-                contact.setCountry(unquote(cols.get(13)));
 
-                String coilExpStr = unquote(cols.get(14));
-                String mobilityFinStr = unquote(cols.get(15));
-                contact.setCoilExp("true".equalsIgnoreCase(coilExpStr));
-                contact.setMobilityFin("true".equalsIgnoreCase(mobilityFinStr));
+                // --- OPTIONAL FIELDS (set only if present) ---
+                contact.setTitle(getColumn(headerIndex, cols, "title"));
 
-                // We ignore createdAt / updatedAt from CSV.
-                // Auditing will set them automatically on save.
+                contact.setFirstName(getColumn(headerIndex, cols,
+                        "firstname", "first_name", "first name"));
+
+                contact.setLastName(getColumn(headerIndex, cols,
+                        "lastname", "last_name", "last name"));
+
+                contact.setGender(getColumn(headerIndex, cols, "gender"));
+
+                contact.setPhone1(getColumn(headerIndex, cols,
+                        "phone1", "phone_1", "phone"));
+
+                contact.setPhone2(getColumn(headerIndex, cols,
+                        "phone2", "phone_2", "mobile", "mobile_phone"));
+
+                contact.setInstitution(getColumn(headerIndex, cols, "institution"));
+                contact.setFaculty(getColumn(headerIndex, cols, "faculty"));
+
+                contact.setStudyDomain(getColumn(headerIndex, cols,
+                        "studydomain", "study_domain", "study domain"));
+
+                contact.setPersGroup(getColumn(headerIndex, cols,
+                        "persgroup", "pers_group", "personal_group", "personal group"));
+
+                contact.setFunction(getColumn(headerIndex, cols,
+                        "function", "jobfunction", "job_function", "job function"));
+
+                contact.setCountry(getColumn(headerIndex, cols, "country"));
+
+                String coilExpStr = getColumn(headerIndex, cols,
+                        "coilexp", "coil_exp", "coil experience");
+                contact.setCoilExp(parseBoolean(coilExpStr));
+
+                String mobilityFinStr = getColumn(headerIndex, cols,
+                        "mobilityfin", "mobility_fin", "mobility financing");
+                contact.setMobilityFin(parseBoolean(mobilityFinStr));
+
+                // We still ignore createdAt / updatedAt in the CSV – auditing handles them.
 
                 contactRepository.save(contact);
                 count++;
@@ -289,6 +325,37 @@ public class ContactServiceImpl implements ContactService {
             throw new ContactImportException("Failed to read CSV file", e);
         }
     }
+
+    private boolean hasAnyHeader(Map<String, Integer> headerIndex, String... names) {
+        for (String name : names) {
+            if (headerIndex.containsKey(name.toLowerCase(Locale.ROOT))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private String getColumn(Map<String, Integer> headerIndex,
+                             List<String> cols,
+                             String... possibleHeaders) {
+
+        for (String candidate : possibleHeaders) {
+            Integer idx = headerIndex.get(candidate.toLowerCase(Locale.ROOT));
+            if (idx != null && idx < cols.size()) {
+                return unquote(cols.get(idx));
+            }
+        }
+        return null;
+    }
+
+
+    private boolean parseBoolean(String value) {
+        if (value == null) return false;
+        String v = value.trim().toLowerCase(Locale.ROOT);
+        return v.equals("true") || v.equals("yes") || v.equals("1") || v.equals("y");
+    }
+
 
     private java.util.List<String> parseCsvLine(String line) {
         java.util.List<String> result = new ArrayList<>();
