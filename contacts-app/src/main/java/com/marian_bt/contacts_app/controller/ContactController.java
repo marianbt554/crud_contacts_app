@@ -145,7 +145,7 @@ public class ContactController {
 
         try (PrintWriter writer = response.getWriter()) {
 
-            // ✅ Added contactedByIngenium column (right before coilExp)
+
             writer.println(
                     "id,title,firstName,lastName,gender,email,phone1,phone2," +
                             "institution,faculty,studyDomain,persGroup,function,country," +
