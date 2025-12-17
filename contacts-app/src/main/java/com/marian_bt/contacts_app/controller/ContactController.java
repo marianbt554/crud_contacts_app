@@ -62,8 +62,6 @@ public class ContactController {
                                  @PageableDefault(size = 20) Pageable pageable,
                                  Model model) {
 
-        // if user changes filters, you often want to reset to first page (optional)
-        // pageable = PageRequest.of(0, pageable.getPageSize(), pageable.getSort());
 
         Page<Contact> page = contactService.searchContacts(criteria, pageable);
         model.addAttribute("contactsPage", page);
@@ -168,7 +166,7 @@ public class ContactController {
                 writer.print(csv(c.getFunction()));              writer.print(',');
                 writer.print(csv(c.getCountry()));               writer.print(',');
 
-                // ✅ New field
+
                 writer.print(csv(Boolean.toString(c.isContactedByIngenium()))); writer.print(',');
 
                 writer.print(csv(Boolean.toString(c.isCoilExp())));             writer.print(',');
