@@ -58,7 +58,6 @@ public class Contact  {
     private boolean          coilExp;
     private boolean          mobilityFin;
     private String           fundUse;
-    private String           pastEvent;
     @Column (name="contacted_by_ingenium", nullable = false)
     private boolean          contactedByIngenium;
     @NotBlank
@@ -235,14 +234,6 @@ public class Contact  {
 
     public void setFundUse(String fundUse) {
         this.fundUse = fundUse;
-    }
-
-    public String getPastEvent() {
-        return pastEvent;
-    }
-
-    public void setPastEvent(String pastEvent) {
-        this.pastEvent = pastEvent;
     }
 
     public boolean isContactedByIngenium() {
