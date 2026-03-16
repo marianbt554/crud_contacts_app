@@ -12,9 +12,7 @@ public class ContactSearchCriteria {
     private String gender;
 
     private String email;
-    private String phone1;
-    private String phone2;
-    private String postAddress;
+
 
     private String institution;
     private String faculty;
@@ -24,7 +22,6 @@ public class ContactSearchCriteria {
 
     private String country;
     private String interest;
-    private String fundUse;
     private String pastEvent;
     private String comments;
 
@@ -57,9 +54,6 @@ public class ContactSearchCriteria {
     public void setGender(String gender) { this.gender = trimToNull(gender); }
 
     public void setEmail(String email) { this.email = trimToNull(email); }
-    public void setPhone1(String phone1) { this.phone1 = trimToNull(phone1); }
-    public void setPhone2(String phone2) { this.phone2 = trimToNull(phone2); }
-    public void setPostAddress(String postAddress) { this.postAddress = trimToNull(postAddress); }
 
     public void setInstitution(String institution) { this.institution = trimToNull(institution); }
     public void setFaculty(String faculty) { this.faculty = trimToNull(faculty); }
@@ -69,7 +63,6 @@ public class ContactSearchCriteria {
 
     public void setCountry(String country) { this.country = trimToNull(country); }
     public void setInterest(String interest) { this.interest = trimToNull(interest); }
-    public void setFundUse(String fundUse) { this.fundUse = trimToNull(fundUse); }
     public void setPastEvent(String pastEvent) { this.pastEvent = trimToNull(pastEvent); }
     public void setComments(String comments) { this.comments = trimToNull(comments); }
 
@@ -80,9 +73,6 @@ public class ContactSearchCriteria {
     public String getGender() { return gender; }
 
     public String getEmail() { return email; }
-    public String getPhone1() { return phone1; }
-    public String getPhone2() { return phone2; }
-    public String getPostAddress() { return postAddress; }
 
     public String getInstitution() { return institution; }
     public String getFaculty() { return faculty; }
@@ -92,7 +82,6 @@ public class ContactSearchCriteria {
 
     public String getCountry() { return country; }
     public String getInterest() { return interest; }
-    public String getFundUse() { return fundUse; }
     public String getPastEvent() { return pastEvent; }
     public String getComments() { return comments; }
 
@@ -124,9 +113,6 @@ public class ContactSearchCriteria {
                 && isBlank(lastName)
                 && isBlank(gender)
                 && isBlank(email)
-                && isBlank(phone1)
-                && isBlank(phone2)
-                && isBlank(postAddress)
                 && isBlank(institution)
                 && isBlank(faculty)
                 && isBlank(studyDomain)
@@ -134,7 +120,6 @@ public class ContactSearchCriteria {
                 && isBlank(function)
                 && isBlank(country)
                 && isBlank(interest)
-                && isBlank(fundUse)
                 && isBlank(pastEvent)
                 && isBlank(comments)
                 && contactedByIngenium == null
@@ -158,9 +143,6 @@ public class ContactSearchCriteria {
                 ", lastName='" + lastName + '\'' +
                 ", gender='" + gender + '\'' +
                 ", email='" + email + '\'' +
-                ", phone1='" + phone1 + '\'' +
-                ", phone2='" + phone2 + '\'' +
-                ", postAddress='" + postAddress + '\'' +
                 ", institution='" + institution + '\'' +
                 ", faculty='" + faculty + '\'' +
                 ", studyDomain='" + studyDomain + '\'' +
@@ -168,7 +150,6 @@ public class ContactSearchCriteria {
                 ", function='" + function + '\'' +
                 ", country='" + country + '\'' +
                 ", interest='" + interest + '\'' +
-                ", fundUse='" + fundUse + '\'' +
                 ", pastEvent='" + pastEvent + '\'' +
                 ", comments='" + comments + '\'' +
                 ", contactedByIngenium=" + contactedByIngenium +
