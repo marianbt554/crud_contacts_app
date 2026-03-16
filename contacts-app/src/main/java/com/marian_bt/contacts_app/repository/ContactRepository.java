@@ -30,8 +30,7 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
       AND (:function           IS NULL OR LOWER(c.function)          LIKE LOWER(CONCAT('%', :function, '%')))
       AND (:country            IS NULL OR LOWER(c.country)           LIKE LOWER(CONCAT('%', :country, '%')))
       AND (:interest           IS NULL OR LOWER(c.interest)          LIKE LOWER(CONCAT('%', :interest, '%')))
-      
-      -- Notice this line: :pastEvent now filters against c.comments!
+   
       AND (:pastEvent          IS NULL OR LOWER(c.comments)          LIKE LOWER(CONCAT('%', :pastEvent, '%')))
       AND (:comments           IS NULL OR LOWER(c.comments)          LIKE LOWER(CONCAT('%', :comments, '%')))
       
