@@ -1,0 +1,25 @@
+# Production profile configuration TEMPLATE
+# DO NOT COMMIT THIS FILE WITH ACTUAL CREDENTIALS!
+# Copy this to application-prod.properties and fill in actual values
+# Keep application-prod.properties out of version control
+
+# Database - REPLACE WITH ACTUAL PRODUCTION CREDENTIALS
+spring.datasource.url=jdbc:mysql://localhost:3306/contactsdb
+spring.datasource.username=contactsapp
+spring.datasource.password=CHANGE_THIS_TO_SECURE_PASSWORD
+
+# Production JPA settings
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=false
+spring.jpa.properties.hibernate.format_sql=false
+
+# Server configuration
+server.port=8080
+server.address=127.0.0.1
+
+# Production logging
+logging.level.root=WARN
+logging.level.com.marian_bt.contacts_app=INFO
+logging.file.name=/var/log/contacts-app/application.log
+logging.file.max-size=10MB
+logging.file.max-history=30
