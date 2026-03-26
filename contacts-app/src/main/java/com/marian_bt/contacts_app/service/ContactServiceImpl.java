@@ -13,9 +13,15 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
+@Transactional
 public class ContactServiceImpl implements ContactService {
 
+    private static final Logger log = LoggerFactory.getLogger(ContactServiceImpl.class);
     private final ContactRepository contactRepository;
 
     public ContactServiceImpl(ContactRepository contactRepository) {
@@ -33,19 +39,31 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public Contact getContactById(Long id) {
+        log.debug("Fetching contact with id: {}", id);
         return contactRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Contact not found with Id " + id));
+                .orElseThrow(() -> {
+                    log.warn("Contact not found with id: {}", id);
+                    return new ContactNotFoundException(id);
+                });
     }
 
     @Override
     public Contact createContact(Contact contact, String currentUsername) {
-        return contactRepository.save(contact);
+        log.info("User '{}' creating new contact with email: {}", currentUsername, contact.getEmail());
+        Contact saved = contactRepository.save(contact);
+        log.info("Contact created successfully with id: {}", saved.getId());
+        return saved;
     }
 
     @Override
     public Contact updateContact(Long id, Contact updatedContact, String currentUsername) {
+        log.info("User '{}' updating contact with id: {}", currentUsername, id);
+
         Contact existing = contactRepository.findById(id)
-                .orElseThrow(() -> new ContactNotFoundException(id));
+                .orElseThrow(() -> {
+                    log.warn("Cannot update - contact not found with id: {}", id);
+                    return new ContactNotFoundException(id);
+                });
 
         existing.setTitle(updatedContact.getTitle());
         existing.setFirstName(updatedContact.getFirstName());
@@ -70,15 +88,20 @@ public class ContactServiceImpl implements ContactService {
         existing.setGender(updatedContact.getGender());
         existing.setComments(updatedContact.getComments());
 
-        return contactRepository.save(existing);
+        Contact saved = contactRepository.save(existing);
+        log.info("Contact {} updated successfully", id);
+        return saved;
     }
 
     @Override
     public void deleteContact(Long id, String currentUsername) {
+        log.info("User '{}' deleting contact with id: {}", currentUsername, id);
         if (!contactRepository.existsById(id)) {
+            log.warn("Cannot delete - contact not found with id: {}", id);
             throw new ContactNotFoundException(id);
         }
         contactRepository.deleteById(id);
+        log.info("Contact {} deleted successfully", id);
     }
 
     @Override
@@ -226,11 +249,14 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public int importContacts(InputStream inputStream) {
+        log.info("Starting CSV import");
+
         try (BufferedReader reader =
                      new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
             String headerLine = reader.readLine();
             if (headerLine == null || headerLine.isBlank()) {
+                log.error("CSV import failed: empty file or missing header");
                 throw new ContactImportException("CSV is empty or missing the header row.");
             }
 
@@ -307,9 +333,11 @@ public class ContactServiceImpl implements ContactService {
                 count++;
             }
 
+            log.info("CSV import completed successfully. Imported {} contacts", count);
             return count;
 
         } catch (IOException e) {
+            log.error("CSV import failed: IO error reading file", e);
             throw new ContactImportException("Failed to read CSV file", e);
         }
     }
